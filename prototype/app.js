@@ -34,6 +34,8 @@
   }
   function cancelPending() {
     generation++; clearTimeout(timer); busy = false;
+    if(pendingHint){const id=pendingHint.id;pendingHint=null;A.change({type:'CANCEL',id});}
+    for(const action of A.state.actions.filter(a=>['allowed','awaiting_approval'].includes(a.status)))A.change({type:'CANCEL',id:action.id});
     $('conversation').removeAttribute('aria-busy'); updateComposer();
   }
   function updateComposer() {
@@ -64,6 +66,7 @@
         <h2>${esc(r.title)}</h2>
         ${warning?sourceErrorDetail():''}
         <p class="answer-body">${esc(r.body)}</p>
+        ${r.state==='bounded_hint'?`<div class="cause-uncertainty">${marker(1)}${esc(window.StudyFlowLocale.t('Mình chưa biết bạn đang vướng ở bước nào; hãy nói rõ phần cần hiểu, không cần đưa đáp án.'))}</div><div class="warning-callout">${marker(3)}${esc(window.StudyFlowLocale.t('Bài đang mở: chỉ gợi ý phương pháp. Xác nhận đáp số bị chặn, kể cả sau khi TA duyệt.'))}</div>`:''}
         ${warning?`<div class="cause-uncertainty"><strong>G2 · Biết kết luận, chưa biết nguyên nhân.</strong>${esc(r.causeUncertainty)}${marker(1)}</div><div class="warning-callout">Câu “độ lệch chuẩn luôn nhỏ hơn phương sai” ở §3.3 cần được xem lại vì phản ví dụ trên bác bỏ tính “luôn”. Tài liệu có nguồn vẫn có thể chứa lỗi.${marker(3)}</div>`:''}
         ${r.comparison?comparison():''}${citations(r)}
         ${r.followup?`<div class="followup"><small>ĐẾN LƯỢT BẠN SUY NGHĨ</small>${esc(r.followup)}</div>`:''}
@@ -113,7 +116,7 @@
     if (!text) { $('form-error').hidden=false; $('form-error').textContent='Viết một câu hỏi hoặc chọn tình huống demo.'; return; }
     cancelPending();
     if (options.reset) { messages=[]; undoStack=[]; dispatch({type:'RESET'}); }
-    undoStack.push({state:{...state}, messages:messages.slice()});
+    undoStack.push({state:{...state}, messages:messages.slice(),autonomy:{scenario:A.state.scenario,variant:A.state.variant}});
     const context = !options.reset && !editing && state.phase==='bounded_hint' ? {exercise:true} : undefined;
     messages.push({kind:'user',text:text.slice(0,1200)});
     $('question').value=''; editing=false; $('form-error').hidden=true;
@@ -123,6 +126,8 @@
     timer = setTimeout(() => {
       if (current!==generation) return;
       dispatch({type:'ASK',question:text,context});
+      const scenario=state.phase==='bounded_hint'?'exercise':'source-error';
+      if(A.state.scenario!==scenario)A.context(scenario);
       A.request('tra_cuu_tai_lieu','read',{sourceAvailable:state.response.sources.length>0||!!state.response.courseSource});
       if(state.phase==='bounded_hint'){
         if(/đáp|đúng|xác nhận|answer|confirm|right/i.test(text))A.request('goi_y_bai_tap','confirm_answer');
@@ -209,7 +214,7 @@
       case 'edit': editQuestion();break;
       case 'report': editQuestion(true);break;
       case 'cancel-edit': editing=false;$('question').value='';updateComposer();break;
-      case 'undo': {cancelPending();const last=undoStack.pop();if(last){const requests=state.requests,nextId=state.nextId;state={...last.state,requests,nextId,clock:state.clock};messages=last.messages;activeScenario='';renderConversation();renderMeta();toast('Đã rút lượt hỏi khỏi hội thoại. Hàng chờ TA không thay đổi.');}break;}
+      case 'undo': {cancelPending();const last=undoStack.pop();if(last){const requests=state.requests,nextId=state.nextId;state={...last.state,requests,nextId,clock:state.clock};messages=last.messages;A.context(last.autonomy.scenario,last.autonomy.variant);activeScenario='';renderConversation();renderMeta();toast('Đã rút lượt hỏi khỏi hội thoại. Hàng chờ TA không thay đổi.');}break;}
       case 'stop': cancelPending();if(messages.at(-1)?.kind==='user')messages.pop();undoStack.pop();renderConversation();toast('Đã huỷ phản hồi mô phỏng.');break;
       case 'ta': draftTA();break;
       case 'cancel-ta': closeTA();break;
@@ -250,9 +255,16 @@
   $('resource-items').innerHTML=Object.entries(E.fixtures.sections).map(([id,s])=>`<button class="resource-item ${s.warning?'flagged':''}" data-action="source" data-source="${id}"><span>§${id}</span><span>${esc(s.title)}</span>${icon(s.warning?'alert':'chevron')}</button>`).join('');
   window.addEventListener('studyflow-tool-approved',event=>{
     const action=event.detail;if(action.tool!=='goi_y_bai_tap'||state.phase!=='bounded_hint')return;
+    if(pendingHint&&pendingHint.id!==action.id)return;
+    if(!pendingHint&&action.operation!=='hint_support')return;
     if(pendingHint?.id===action.id&&pendingHint.level===1)state={...state,response:pendingHint.response};
     else dispatch({type:'NEXT_HINT'});
     pendingHint=null;if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;renderConversation();
+  });
+  window.addEventListener('studyflow-tool-stopped',event=>{
+    if(pendingHint?.id!==event.detail.id)return;
+    if(pendingHint.level===1){state={...state,response:{...state.response,label:window.StudyFlowLocale.t('Yêu cầu gợi ý đã dừng'),body:window.StudyFlowLocale.t('Yêu cầu chưa được thực hiện. Bạn có thể sửa câu hỏi, yêu cầu gợi ý phù hợp hoặc nhờ TA. Không có đáp số nào được xác nhận.')}};if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;}
+    pendingHint=null;renderConversation();
   });
   window.addEventListener('studyflow-policy-change',()=>{pendingHint=null;renderConversation();});
   window.addEventListener('studyflow-demo-reset',()=>{

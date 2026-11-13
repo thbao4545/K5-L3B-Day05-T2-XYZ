@@ -43,7 +43,6 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
       assert.match(await page.locator('#ta-question').inputValue(),/0,25/);
       assert.match(await page.locator('#ta-dialog-hours').innerText(),/sau hạn bài 3/);
       assert.equal(await page.locator('#queue-count').innerText(),'0');
-      await page.screenshot({path:path.join(root,'screenshots/02-autonomy.png')});
       await page.locator('[data-action="cancel-ta"]').last().click();
       assert.equal(await page.locator('#queue-count').innerText(),'0');
       await lastAnswer().locator('[data-action="ta"]').click();
@@ -113,6 +112,56 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
       await extra.locator('[data-action="ta"]').click();await extra.locator('#ta-consent').check();await extra.locator('#confirm-ta').click();
       assert.equal(await extra.locator('#queue-count').innerText(),'2');await extra.reload();assert.equal(await extra.locator('#queue-count').innerText(),'2');
       await extra.close();
+    });
+    await t.test('FAQ comparison really drafts, approves, rejects, blocks and removes mock publication',async()=>{
+      await page.setViewportSize({width:1440,height:1000});await scenario('source-error');
+      await page.locator('#autonomy-panel summary').first().click();
+      await page.locator('[data-autonomy="variant"][data-variant="1"]').click();
+      await page.locator('[data-autonomy="manual"]').click();assert.equal(await page.locator('#faq-draft').isVisible(),true);
+      assert.equal(await page.locator('.trace-item').filter({hasText:'dang_FAQ'}).count(),0,'manual-report option must not call FAQ tool');
+      await page.locator('[data-autonomy="variant"][data-variant="2"]').click();
+      await page.locator('[data-autonomy="faq-request"]').click();assert.match(await page.locator('.approval-card').innerText(),/awaiting_approval/);
+      assert.doesNotMatch(await page.locator('.approval-card').innerText(),/published_mock/);
+      if(!await page.locator('body').evaluate(el=>el.classList.contains('show-annotations')))await page.locator('[data-action="annotations"]').click();
+      assert.equal(await page.locator('.approval-card [data-mark="4"]').isVisible(),true);
+      await page.locator('#autonomy-panel').screenshot({path:path.join(root,'screenshots/02-autonomy.png')});
+      await page.setViewportSize({width:390,height:844});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'approval annotations stay inside mobile viewport');
+      await page.setViewportSize({width:1440,height:1000});
+      await page.locator('[data-autonomy="reject"]').click();assert.match(await page.locator('.approval-card').innerText(),/rejected/);
+      await page.locator('[data-autonomy="faq-request"]').click();await page.locator('[data-autonomy="approve"]').click();assert.match(await page.locator('.approval-card').innerText(),/published_mock/);
+      await page.locator('[data-autonomy="undo"]').click();assert.match(await page.locator('.approval-card').innerText(),/unpublished_mock/);assert.match(await page.locator('.approval-card').innerText(),/không được thu hồi/);
+      await page.locator('[data-autonomy="faq-bypass"]').click();assert.match(await page.locator('.approval-card').innerText(),/denied/);
+      await page.locator('[data-autonomy="variant"][data-variant="3"]').click();await page.locator('[data-autonomy="faq-request"]').click();assert.match(await page.locator('.approval-card').innerText(),/published_mock/);assert.match(await page.locator('#autonomy-content').innerText(),/GIẢ ĐỊNH BỊ LOẠI|giả định bị loại/);
+      await page.locator('[data-autonomy="undo"]').click();
+      await page.locator('[data-autonomy="variant"][data-variant="2"]').click();await page.locator('[data-autonomy="faq-request"]').click();
+      await page.locator('[data-action="reset"]').click();
+      assert.equal(await page.locator('[data-autonomy="approve"]').count(),0,'new conversation cancels old pending FAQ');
+    });
+    await t.test('TA may approve a safe hint, never an answer; rejected hint can be requested again',async()=>{
+      await scenario('exercise');
+      await page.locator('[data-autonomy="variant"][data-variant="2"]').click();
+      await page.locator('[data-action="hint"]').click();
+      assert.match(await page.locator('.approval-card').innerText(),/awaiting_approval/);
+      await page.locator('[data-autonomy="reject"]').click();assert.equal(await page.locator('[data-action="hint"]').isDisabled(),false);
+      await page.locator('[data-action="hint"]').click();await page.locator('[data-autonomy="approve"]').click();
+      assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true);assert.doesNotMatch(await lastAnswer().innerText(),/11[.,]5|15[.,]25|đáp án là trung vị/);
+      await scenario('exercise');await page.locator('[data-autonomy="variant"][data-variant="3"]').click();assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true);
+      assert.match(await page.locator('#autonomy-content').innerText(),/open_assignment|Hard guardrail/);
+      await lastAnswer().locator('[data-action="edit"]').click();await page.locator('#question').fill('Tôi muốn hỏi về phương sai');await page.locator('#send-button').click();await finished();
+      await lastAnswer().locator('[data-action="undo"]').click();
+      assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true,'undo restores exercise comparison policy');
+      await page.locator('[data-autonomy="variant"][data-variant="2"]').click();
+      await page.locator('#question').fill('Bài 3 câu b cần hiểu ngoại lai');await page.locator('#send-button').click();await finished();
+      await page.locator('[data-autonomy="hint-support"]').click();await page.locator('[data-autonomy="approve"]').click();
+      assert.equal(await page.evaluate(()=>StudyFlowAutonomy.state.actions.filter(a=>a.status==='awaiting_approval').length),0,'replacement guidance leaves no orphan approval');
+    });
+    await t.test('reset clears simulated activity and pending work and both scenarios can replay',async()=>{
+      await page.locator('[data-autonomy="reset"]').click();assert.equal(await page.locator('.trace-item').count(),0);assert.equal(await page.locator('#queue-count').innerText(),'0');
+      await scenario('source-error');assert.match(await lastAnswer().innerText(),/0,25/);
+      await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+      await scenario('exercise');assert.match(await lastAnswer().innerText(),/không cung cấp hoặc xác nhận/);
+      await page.setViewportSize({width:1440,height:1000});
     });
     await t.test('landing renders, pauses, respects reduced motion and links to app',async()=>{
       await page.setViewportSize({width:1440,height:900});await page.goto(url+'/landing.html');await page.waitForTimeout(1500);

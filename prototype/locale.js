@@ -98,6 +98,18 @@
   add('Hạn 06/11/2026 lúc 23:59. Đáp án công bố 07/11: “Trung bình cộng của 4, 8, 6, 5, 7 là 6.”','Due 6 Nov 2026 at 23:59. Published on 7 Nov: “The mean of 4, 8, 6, 5, 7 is 6.”');
   add('Tài liệu gốc bên dưới được giữ nguyên bằng tiếng Việt.','The original fixture text below is preserved in Vietnamese.');
   add('0,25','0.25');add('0,5','0.5');
+  add("Chú thích ca #2 / #5 · HAX / PAIR","Annotations for #2 / #5 · HAX / PAIR");
+  add("Ca #5: phản ví dụ toán học kiểm chứng được; chỉ nguyên nhân lỗi biên soạn chưa rõ. Ca #2: hỏi bước đang vướng thay vì đoán người học đã tự tính.","Case #5: the counterexample is verifiable; only the editing cause is unknown. Case #2: ask where the learner is stuck, without assuming prior work.");
+  add("Ca #5: nguyên văn §3.3 và 0,25 → 0,5. Ca #2: nguồn và trạng thái bài đang mở. Citation mở được để tự kiểm tra.","Case #5: original §3.3 and 0.25 → 0.5. Case #2: sources and the open assignment status. Citations can be inspected.");
+  add("Ca #5 chỉ rõ câu sai và lý do. Ca #2 chặn xác nhận đáp số trước khi hiển thị, kể cả được phê duyệt.","Case #5 identifies the incorrect claim and why. Case #2 blocks final answers before display, even after approval.");
+  add("Hiện ở thẻ phê duyệt FAQ/gợi ý và modal xác nhận TA. Trạng thái chờ, từ chối, huỷ và kết quả đều là mô phỏng.","Shown on FAQ/hint review cards and TA confirmation. Waiting, rejection, cancellation and results are all simulated.");
+  add("Vì sao phương án ① không có ④ ở phần FAQ? Học viên tự báo, AI không gọi dang_FAQ nên không có bước duyệt hoặc gỡ. Nếu chọn chuyển TA riêng, ④ vẫn hiện ở modal cần học viên xác nhận. Số chú thích không phải số mức tự chủ. Phương án ③ tự đăng chỉ là giả định bị loại; ca #2 luôn chặn giải hộ.","Why does FAQ option ① have no ④? The student reports manually, so AI does not call dang_FAQ and no approval or removal occurs. A separate TA request still shows ④ at student confirmation. Annotation numbers are not autonomy levels. Auto-publishing option ③ is a rejected hypothesis; solving case #2 stays blocked.");
+  add("Mình chưa biết bạn đang vướng ở bước nào; hãy nói rõ phần cần hiểu, không cần đưa đáp án.","I do not know which step you are stuck on. Describe what you want to understand; no answer is needed.");
+  add("Bài đang mở: chỉ gợi ý phương pháp. Xác nhận đáp số bị chặn, kể cả sau khi TA duyệt.","This assignment is open: methods only. Final answer confirmation is blocked, even after TA approval.");
+  add("Yêu cầu gợi ý đã dừng","Guidance request stopped");
+  add("Yêu cầu chưa được thực hiện. Bạn có thể sửa câu hỏi, yêu cầu gợi ý phù hợp hoặc nhờ TA. Không có đáp số nào được xác nhận.","The request was not executed. Edit your question, request safe guidance or ask a TA. No final answer was confirmed.");
+  add("Chính sách đề xuất · baseline","Proposed baseline policy");
+  add("Chỉ TA hoặc giảng viên được phê duyệt và công bố. Panel Autonomy mô phỏng bước duyệt; không có công bố thật.","Only an authorized TA or instructor can approve publication. The Autonomy panel simulates review; nothing is really published.");
   const escapeRegExp=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   const embedded=[...pairs.keys()].filter(s=>s.length>=7).sort((a,b)=>b.length-a.length);
   const pattern=new RegExp(embedded.map(escapeRegExp).join('|'),'g');

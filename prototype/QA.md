@@ -4,13 +4,15 @@ Thực hiện ngày 13/11/2026 (UTC+7). Trình duyệt Chrome headless qua Playw
 
 ## Phạm vi hành vi
 
-Lệnh: `node --test prototype/tests/engine.test.cjs prototype/tests/browser.test.cjs`, Playwright có sẵn qua `NODE_PATH`. Suite có 10 engine tests, 9 ca browser và test bao ngoài (20 mục trong báo cáo Node).
+Lệnh: `node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs`, Playwright có sẵn qua `NODE_PATH`. Suite có 11 engine tests, 7 autonomy tests, 14 ca browser và test bao ngoài (33 mục trong báo cáo Node). Lượt kiểm tra hoàn tất: **33/33 pass, 0 fail**. Có kiểm tra riêng panel mở ở 390px bằng tiếng Anh, hủy gợi ý rồi yêu cầu lại và marker ca #2.
 
 | Nhóm | Những gì được kiểm tra |
 |---|---|
 | #5, annotation A | Loading → nguyên văn §3.3 → 0,25/0,5 → khác đơn vị; G2 tách nguyên nhân chưa rõ khỏi kết luận toán; ①②③⑤ hiện đúng ở thẻ, ④ trong modal |
 | Xác nhận TA | Chưa consent thì disabled; huỷ không tăng queue; xem/sửa rồi xác nhận mới thêm; refresh giữ yêu cầu; rút được; mọi trạng thái ghi mô phỏng |
 | #2 | Chặn xin đáp án, số/xác nhận lựa chọn, câu không dấu, mixed intent và hỏi tiếp; gợi ý dừng 2/2; nguồn §3.1/§3.2/§3.5 |
+| Autonomy thực thi | Đúng bốn tool; lookup AUTO; FAQ draft/chờ/Approve/Reject/cancel/chặn tự đăng/gỡ; giả định bị loại có nhãn; gợi ý cần duyệt không lách guardrail; reset/đổi ca/undo giữ state nhất quán |
+| VI/EN và theme | Lưu qua reload, không mất hội thoại; câu hỏi người học và nguồn giữ nguyên; form light đủ tương phản; hai ca chạy bằng EN |
 | Ca phụ | Happy path có nguồn; slide 12 không tồn tại; p-value chỉ đề cương; người học sửa ý đổi được mục giải thích |
 | Phục hồi | Sửa sau bài tập thoát ngữ cảnh cũ; báo sai cục bộ; rút lượt; huỷ loading không sinh phản hồi muộn |
 | Dữ liệu | Câu lạ có fallback; HTML nhập vào không thực thi; queue dài không làm mất yêu cầu chờ; bản nháp dài rút gọn rõ trước consent |
@@ -24,7 +26,7 @@ Lệnh: `node --test prototype/tests/engine.test.cjs prototype/tests/browser.tes
 
 ## Review và sửa lỗi
 
-Reviewer độc lập không thấy critical. Ba important được tái hiện rồi sửa: ngữ cảnh bài tập giữ quá lâu, menu mobile ẩn vẫn nhận Tab, và dọn lịch sử làm mất queue đang chờ. Có test RED→GREEN. Cũng sửa bản nháp dài bị cắt sau khi xem; nay nội dung được rút gọn có nhãn trước bước xác nhận. Annotation A được kiểm tra thêm trong engine và browser, không thay đổi landing hay quyền thao tác.
+Reviewer độc lập không thấy critical. Ba important được tái hiện rồi sửa: ngữ cảnh bài tập giữ quá lâu, menu mobile ẩn vẫn nhận Tab, và dọn lịch sử làm mất queue đang chờ. Có test RED→GREEN. Cũng sửa bản nháp dài bị cắt sau khi xem; nay nội dung được rút gọn có nhãn trước bước xác nhận. Review VI/EN/theme tìm ra bản nháp dịch cả câu người học và lỗi form light tương phản thấp: đã sửa và kiểm tra. Review autonomy tái hiện ba lỗi state: hội thoại mới giữ FAQ chờ duyệt, undo không phục hồi policy và gợi ý nhận nhầm phê duyệt; đã bổ sung regression và sửa gắn action ID, hủy yêu cầu cũ, phục hồi context. Rà ảnh tìm thêm marker ④/⑥ của panel thiếu điểm neo, gây tràn 9px ở 390px; đã đặt lại vị trí tương đối và kiểm tra panel mở bằng VI/EN.
 
 ## Skills và Taste inspection
 

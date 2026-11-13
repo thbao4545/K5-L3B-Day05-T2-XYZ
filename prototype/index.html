@@ -58,14 +58,14 @@
           </section>
           <section id="queue-view" hidden aria-labelledby="queue-heading"><div class="queue-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2 id="queue-heading">Hàng chờ TA</h2></div><span class="mock-badge">Chỉ trong trình duyệt</span></div><div class="queue-notice"><svg><use href="#i-clock"/></svg><div><strong id="queue-ta-label"></strong><p id="queue-ta-detail"></p></div></div><div id="queue-list"></div></section>
           <details class="annotation-legend" id="annotation-legend" hidden>
-            <summary>Chú thích của A · scenario #5 · HAX / PAIR</summary>
+            <summary>Chú thích ca #2 / #5 · HAX / PAIR</summary>
             <div>
-              <p><b>① · HAX G2</b> Phản ví dụ toán học kiểm chứng được; chỉ nguyên nhân tài liệu viết sai là chưa rõ.</p>
-              <p><b>② · HAX G11 / Explainability</b> Nguyên văn §3.3, phản ví dụ 0,25 → 0,5 và nguồn mở được để tự kiểm tra.</p>
-              <p><b>③ · Rubric domain #6</b> Chỉ rõ câu cần xem lại và lý do; không mặc định tài liệu đúng.</p>
+              <p><b>① · HAX G2</b> Ca #5: phản ví dụ toán học kiểm chứng được; chỉ nguyên nhân lỗi biên soạn chưa rõ. Ca #2: hỏi bước đang vướng thay vì đoán người học đã tự tính.</p>
+              <p><b>② · HAX G11 / Explainability</b> Ca #5: nguyên văn §3.3 và 0,25 → 0,5. Ca #2: nguồn và trạng thái bài đang mở. Citation mở được để tự kiểm tra.</p>
+              <p><b>③ · Rubric domain #3 / #6</b> Ca #5 chỉ rõ câu sai và lý do. Ca #2 chặn xác nhận đáp số trước khi hiển thị, kể cả được phê duyệt.</p>
               <p><b>⑤ · PAIR Errors + Graceful Failure</b> Đường nhờ TA có tóm tắt soạn sẵn, không bắt kể lại, không tuyên bố gửi thật.</p>
-              <p><b>④ · Xác nhận trước thao tác</b> Chỉ hiện tại modal duyệt yêu cầu TA. Chưa xác nhận thì chưa có hàng chờ.</p>
-              <p class="annotation-history">Vì sao mức ① của bản thử trước không có ④? Mức đó chỉ gợi ý học viên tự báo, không có bước AI đăng, chờ duyệt hoặc gỡ FAQ để đánh dấu. Bản này bỏ toggle tự đăng FAQ; ④ đánh dấu bước học viên xác nhận hàng chờ TA mô phỏng theo chính sách provisional, không phải phê duyệt FAQ.</p>
+              <p><b>④ · Xác nhận trước thao tác</b> Hiện ở thẻ phê duyệt FAQ/gợi ý và modal xác nhận TA. Trạng thái chờ, từ chối, huỷ và kết quả đều là mô phỏng.</p>
+              <p class="annotation-history">Vì sao phương án ① không có ④ ở phần FAQ? Học viên tự báo, AI không gọi dang_FAQ nên không có bước duyệt hoặc gỡ. Nếu chọn chuyển TA riêng, ④ vẫn hiện ở modal cần học viên xác nhận. Số chú thích không phải số mức tự chủ. Phương án ③ tự đăng chỉ là giả định bị loại; ca #2 luôn chặn giải hộ.</p>
               <p><b>⑥ · G9 / Recovery</b> Sửa ý, báo sai cục bộ và rút lượt; phản hồi sau thay đổi theo câu hỏi đã sửa.</p>
               <p><b>⑦ · G10 / Graceful Failure</b> Ca thiếu nguồn nêu dữ liệu hiện có, hỏi lại thay vì đoán.</p>
             </div>
