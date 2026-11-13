@@ -48,6 +48,7 @@
 
 - **Chọn #2 — Lộ đáp án bài đang mở.** Sai ở đây trực tiếp làm mất mục tiêu của trợ lý Study: học viên có thể nộp câu trả lời mà chưa hiểu cách lập luận. `goi_y_bai_tap` gửi quá tay thì đáp án đã tới người học, không có nút hoàn tác để xoá điều họ đã thấy. So với #1, #3, #4 và #8, đây không chỉ là thiếu nguồn hoặc giải thích lệch: kết quả đánh giá có thể đã bị ảnh hưởng ngay. Vì vậy cần chặn tiết lộ đáp án trước khi gửi, không chỉ thêm câu nhắc “hãy tự làm” phía sau.
 - **Chọn #5 — Tin tài liệu sai và làm học viên học sai có căn cứ.** Đây là bẫy khó hơn thiếu nguồn: AI có thể dẫn đúng §3.3 mà nội dung vẫn sai. Học viên khó nhận ra vì có trích dẫn chính thức; khái niệm sai có thể theo họ sang các buổi sau, và phạm vi thiệt hại tăng nếu đưa lên FAQ. So với #6 hoặc #7, việc sửa không chỉ là đổi giọng nói hay tra lại một trường dữ liệu: cần chỉ ra mâu thuẫn, giải thích bằng phản ví dụ và đưa câu lỗi tới người có quyền rà soát tài liệu.
+- **Suýt chọn #9 — Xác nhận giả hoặc báo chuyển TA giả.** Ca này cũng làm mất niềm tin và có thể ảnh hưởng quyết định sửa bài. Nhóm chưa chọn vì có thể đặt ranh giới rõ bằng quyền của tool và trạng thái chuyển thật; phần xác nhận đáp số bài đang mở đã được kiểm tra sâu ở #2. Chọn #2 và #5 giúp kiểm tra hai cơ chế bảo vệ khác nhau: ngăn hỗ trợ vượt mức, và xử lý tình huống chính nguồn tài liệu có lỗi.
 
 ## §3. Khi AI sai  (chặng 3)
 
