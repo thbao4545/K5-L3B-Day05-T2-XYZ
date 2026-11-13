@@ -95,5 +95,27 @@
    return a;
   })};
  }
- return {registry,initial,recommended,comparison,policy,evaluate,transition};
+ // One learner projection for chat. Technical comparison copy never becomes a tutor reply.
+ function learner(s,language,action,base,status=action?.status){
+  const pick=(vi,en)=>language==='en'?en:vi;
+  const r={...base,decision:'',attachment:null,learnerScenario:s.scenario,learnerVariant:s.variant,learnerStatus:status||'not_run',followup:base.followup};
+  if(s.scenario==='exercise'){
+   if(s.variant===3)return {...r,origin:'policy-simulation',notice:'',risky:true,label:pick('Giả định bị loại · đáp án được che','Rejected hypothesis · answer hidden'),title:pick('Lời giải câu b.','Solution to part b.'),body:pick('Mình sẽ giải câu b cho bạn. Đây là thước đo cần chọn và kết quả cuối cùng; bạn có thể dùng phần nhận xét bên dưới.','I will solve part b for you. Here is the measure to choose and the final result; you can use the conclusion below.'),followup:'',attachment:{kind:'solution',title:pick('Kết quả AI đưa ngay','Immediate AI result'),text:pick('Thước đo: [LỰA CHỌN CUỐI ĐÃ ẨN]\nKết quả: [ĐÁP ÁN ĐÃ ẨN]\nNhận xét: [KẾT LUẬN HOÀN CHỈNH ĐÃ ẨN]','Measure: [FINAL CHOICE HIDDEN]\nResult: [ANSWER HIDDEN]\nConclusion: [COMPLETED ANSWER HIDDEN]')}};
+   if(s.variant===1)return r;
+   const waiting=['awaiting_approval','allowed'].includes(status),approved=status==='executed';
+   return {...r,origin:'policy-simulation',notice:'',label:waiting?pick('Chờ TA duyệt gợi ý','Waiting for TA review'):approved?pick('Gợi ý đã được duyệt · mô phỏng','Guidance approved · simulated'):pick('Gợi ý chưa được mở','Guidance not released'),title:waiting?pick('Mình đang chờ TA.','I am waiting for a TA.'):approved?pick('Mình cùng tiếp tục nhé.','Let us continue.'):pick('Mình chưa mở gợi ý này.','I have not released this hint.'),body:waiting?pick('Mình đang chờ TA duyệt phần hướng dẫn về cách phân tích giá trị ngoại lai. Trong lúc chờ, bạn có thể nói rõ bước đang vướng; mình chưa đưa phần gợi ý mới.','I am waiting for a TA to review guidance on analyzing outliers. While we wait, tell me which step is difficult; I have not released the new hint.'):approved?pick('TA đã duyệt phần hướng dẫn trong mô phỏng. ','The TA approved this guidance in the simulation. ')+base.body:pick('Phần gợi ý này chưa được duyệt hoặc đã được hủy. Mình chưa đưa nội dung mới. Bạn có thể sửa câu hỏi, yêu cầu lại gợi ý hoặc nhờ TA hỗ trợ.','This guidance was not approved or was cancelled. I have not released anything new. Edit your question, request guidance again or ask a TA.'),followup:approved?base.followup:''};
+  }
+  r.attachment={kind:'draft',title:pick(s.variant===1?'Nội dung để bạn tự báo giảng viên':'Bản nháp chờ giảng viên',s.variant===1?'Your report to the instructor':'Draft for instructor review'),text:action?.payload?.text??pick('Nhờ giảng viên xác minh phát biểu “độ lệch chuẩn luôn nhỏ hơn phương sai” ở §3.3. Phản ví dụ: phương sai 0,25, độ lệch chuẩn 0,5; hai đại lượng có đơn vị khác nhau.','Please verify the claim in §3.3 that standard deviation is always smaller than variance. Counterexample: variance 0.25, standard deviation 0.5; the quantities have different units.')};
+  r.decision=s.variant===1?pick('Mình đã soạn nội dung để bạn tự báo giảng viên. Bạn có thể xem và sửa bản nháp; mình chưa gửi hay đăng nội dung này.','I drafted a report for you to share with the instructor. You can review and edit it; I have not sent or published it.'):pick('Mình đã chuẩn bị cảnh báo và đang chờ giảng viên duyệt. Chưa có cảnh báo nào được công bố cho cả lớp.','I prepared a notice and am waiting for instructor approval. Nothing has been published to the class.');
+  if(status==='executed'){
+   r.decision=s.variant===3?pick('Mình đã tự đăng cảnh báo này cho cả lớp trong mô phỏng, chưa chờ giảng viên duyệt.','I published this notice to the simulated class without waiting for instructor approval.'):pick('Giảng viên đã duyệt trong mô phỏng. Mình đã đưa cảnh báo bên dưới lên phần FAQ của lớp mô phỏng.','The instructor approved it in the simulation. I added the notice below to the simulated class FAQ.');
+   r.attachment={...r.attachment,kind:'published',title:pick('Cảnh báo cả lớp nhìn thấy · mô phỏng','Notice visible to the class · simulated')};
+  }
+  if(status==='rejected')r.decision=pick('Cảnh báo chưa được duyệt nên mình chưa đăng. Bạn có thể sửa bản nháp hoặc nhờ TA xác minh thêm.','The notice was not approved, so I did not publish it. You can edit the draft or ask a TA to verify it.');
+  if(status==='cancelled')r.decision=pick('Bạn đã hủy yêu cầu. Mình chưa đăng cảnh báo; bản nháp vẫn có thể sửa để gửi duyệt lại.','You cancelled the request. I did not publish the notice; you can edit the draft and request review again.');
+  if(status==='denied')r.decision=pick('Mình chưa đăng cảnh báo vì cần giảng viên duyệt trước. Bản nháp vẫn ở đây để bạn kiểm tra.','I did not publish the notice because instructor approval is required. The draft is here for you to review.');
+  if(status==='undone'){r.decision=pick('Mình đã gỡ cảnh báo khỏi lớp mô phỏng. Việc gỡ chỉ dừng hiển thị tiếp, không thu hồi thông tin đã được đọc.','I removed the notice from the simulated class. This stops further display; it cannot recall information already read.');r.attachment=null;}
+  r.risky=s.variant===3;r.followup='';return r;
+ }
+ return {registry,initial,recommended,comparison,learner,policy,evaluate,transition};
 });

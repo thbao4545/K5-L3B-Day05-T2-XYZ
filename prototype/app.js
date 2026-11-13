@@ -62,15 +62,18 @@
     const missing = ['insufficient_evidence','clarification_required'].includes(r.state);
     return `<article class="message assistant-message">
       <div class="message-meta"><span class="mini-avatar">${icon('spark')}</span><strong>StudyFlow AI</strong><span>${r.origin==='luna'?(r.state==='bounded_hint'?'· Luna · gợi ý giới hạn':'· Luna · trực tiếp'):r.origin==='policy-simulation'?'· Mô phỏng quyền':r.origin?'· Fixture dự phòng':'· Phản hồi mô phỏng'}</span></div>
-      <div class="assistant-card">
+      <div class="assistant-card" ${r.learnerVariant?`data-learner-variant="${r.learnerVariant}" data-learner-scenario="${r.learnerScenario}" data-learner-status="${r.learnerStatus}"`:''}>
         ${reported ? '<p class="correction-note">Bạn đã đánh dấu phản hồi cần sửa · ghi nhận cục bộ, chưa báo TA.</p>' : ''}
         ${r.notice?`<p class="correction-note" role="status">${esc(r.notice)}</p>`:''}
         <div class="evidence-label ${warning?'warning':missing?'missing':''}">${icon(warning?'alert':missing?'book':'shield')}${esc(r.label)}</div>
         <h2>${esc(r.title)}</h2>
         ${warning?sourceErrorDetail():''}
         <p class="answer-body" ${r.origin==='luna'?'data-user-content':''}>${esc(r.body)}</p>
-        ${r.decision?`<div class="workflow-decision" role="status"><strong>${window.StudyFlowLocale.language==='en'?'AI decision · permission simulation':'AI quyết định · mô phỏng quyền'}</strong><p data-user-content>${esc(r.decision)}</p></div>`:''}
-        ${r.state==='bounded_hint'?`<div class="cause-uncertainty">${marker(1)}${esc(window.StudyFlowLocale.t('Mình chưa biết bạn đang vướng ở bước nào; hãy nói rõ phần cần hiểu, không cần đưa đáp án.'))}</div><div class="warning-callout">${marker(3)}${esc(window.StudyFlowLocale.t('Bài đang mở: chỉ gợi ý phương pháp. Xác nhận đáp số bị chặn, kể cả sau khi TA duyệt.'))}</div>`:''}
+        ${r.decision?`<div class="workflow-decision" role="status"><strong>${window.StudyFlowLocale.language==='en'?'Next step':'Bước tiếp theo'}</strong><p data-user-content>${esc(r.decision)}</p></div>`:''}
+        ${r.attachment?`<section class="learner-attachment ${r.attachment.kind==='solution'?'solution-preview':r.attachment.kind==='published'?'faq-preview':''}"><strong>${esc(r.attachment.title)}</strong><p data-user-content>${esc(r.attachment.text||(window.StudyFlowLocale.language==='en'?'The draft is empty.':'Bản nháp đang trống.'))}</p>${r.risky?`<small>${window.StudyFlowLocale.language==='en'?'Rejected hypothesis · local simulation only':'Giả định bị loại · chỉ mô phỏng cục bộ'}</small>`:''}</section>`:''}
+        ${r.state==='bounded_hint'&&!r.risky?`<div class="cause-uncertainty">${marker(1)}${esc(window.StudyFlowLocale.t('Mình chưa biết bạn đang vướng ở bước nào; hãy nói rõ phần cần hiểu, không cần đưa đáp án.'))}</div><div class="warning-callout">${marker(3)}${esc(window.StudyFlowLocale.t('Bài đang mở: chỉ gợi ý phương pháp. Xác nhận đáp số bị chặn, kể cả sau khi TA duyệt.'))}</div>`:''}
+        ${r.state==='bounded_hint'&&r.risky?`<div class="warning-callout">${marker(3)}${window.StudyFlowLocale.language==='en'?'Rejected alternative: AI skips asking where you are stuck and solves it for you. The real answer is hidden because this assignment is open.':'Phương án bị loại: AI bỏ qua bước hỏi bạn đang vướng ở đâu và làm thay bài. Đáp án thật đã được che vì bài đang mở.'}</div>`:''}
+        ${r.state==='bounded_hint'&&r.risky?`<div class="cause-uncertainty">${marker(1)}${window.StudyFlowLocale.language==='en'?'This reply assumes what you need without clarifying your learning difficulty.':'Phản hồi này tự đoán bạn cần gì mà chưa hỏi rõ phần bạn đang vướng.'}</div>`:''}
         ${warning?`<div class="cause-uncertainty"><strong>G2 · Biết kết luận, chưa biết nguyên nhân.</strong>${esc(r.causeUncertainty)}${marker(1)}</div><div class="warning-callout">Câu “độ lệch chuẩn luôn nhỏ hơn phương sai” ở §3.3 cần được xem lại vì phản ví dụ trên bác bỏ tính “luôn”. Tài liệu có nguồn vẫn có thể chứa lỗi.${marker(3)}</div>`:''}
         ${r.comparison?comparison():''}${citations(r)}
         ${r.followup?`<div class="followup"><small>ĐẾN LƯỢT BẠN SUY NGHĨ</small><span ${r.origin==='luna'?'data-user-content':''}>${esc(r.followup)}</span></div>`:''}
@@ -81,7 +84,7 @@
           ${r.outline?'<button data-action="outline">Xem đề cương</button>':''}
           <button class="${warning?'action-primary':''}" data-action="ta">${icon('chat')}Nhờ TA xác minh</button>${marker(5)}
         </div>
-        ${r.state==='bounded_hint'?`<p class="hint-limit">Mức gợi ý ${state.hintLevel}/2 · Chỉ chuẩn bị và định hướng. Không giải trọn bài.${state.hintLevel>=2?' Đã đến giới hạn; hãy tự thực hiện hoặc hỏi TA.':''}</p>`:''}
+        ${r.state==='bounded_hint'&&!r.risky?`<p class="hint-limit">Mức gợi ý ${state.hintLevel}/2 · Chỉ chuẩn bị và định hướng. Không giải trọn bài.${state.hintLevel>=2?' Đã đến giới hạn; hãy tự thực hiện hoặc hỏi TA.':''}</p>`:''}
         <div class="feedback"><button data-action="edit">${icon('edit')}Sửa câu hỏi</button><button data-action="report">${icon('alert')}Báo câu trả lời sai</button><button data-action="undo">${icon('undo')}Rút lượt hỏi</button>${marker(6)}</div>`:''}
       </div></article>`;
   }
@@ -91,6 +94,8 @@
   function renderConversation() {
     const container = $('conversation');
     container.innerHTML = messages.length ? messages.map((m,i) => m.kind==='user' ? `<article class="message user-message"><div class="message-meta">Bạn · ${state.clock}</div><p class="user-bubble" data-user-content>${esc(m.text)}</p></article>` : assistant(m.response, i===messages.length-1 && !busy, m.reported)).join('') : welcome();
+    const latest=messages.at(-1)?.response;
+    if(latest?.learnerVariant)container.insertAdjacentHTML('afterbegin',`<div class="learner-preview-heading"><span>${window.StudyFlowLocale.language==='en'?'What the learner sees':'Học viên nhìn thấy'}</span><strong>${['','①','②','③'][latest.learnerVariant]} · ${esc(window.StudyFlowPolicy.comparison({scenario:latest.learnerScenario,variant:latest.learnerVariant},window.StudyFlowLocale.language).title)}</strong></div>`);
     if (busy) container.insertAdjacentHTML('beforeend', `<div class="loading-card" role="status"><div class="loading-header">${icon('spark')}${LIVE?'Luna đang đọc câu hỏi và đối chiếu tài liệu…':'Đang đối chiếu fixture buổi 3…'} <button class="text-button" data-action="stop">Huỷ</button></div><div class="loading-line"></div><div class="loading-line"></div><div class="loading-line"></div></div>`);
   }
   function setView(queue) {
@@ -227,7 +232,7 @@
       case 'queue': closeMenu();setView(true);break;
       case 'hint': {
         const action=A.request('goi_y_bai_tap','hint',{level:2});
-        if(action.status==='executed'){dispatch({type:'NEXT_HINT'});if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;renderConversation();toast('Mức 2/2 · Vẫn giữ giới hạn bài đang mở.');}
+        if(action.status==='executed'){dispatch({type:'NEXT_HINT'});if(messages.at(-1)?.kind==='assistant'){messages.at(-1).response=state.response;messages.at(-1).autonomyBase=state.response;}A.render();renderConversation();toast('Mức 2/2 · Vẫn giữ giới hạn bài đang mở.');}
         else if(action.status==='awaiting_approval'){pendingHint={id:action.id,level:2};A.open();renderConversation();}
         break;
       }
@@ -280,10 +285,9 @@
     const message=messages.at(-1);
     if(!message.autonomyBase)message.autonomyBase={...message.response};
     const base=message.autonomyBase;
-    let response={...base,decision:output.reply};
+    let response=window.StudyFlowPolicy.learner({scenario,variant},window.StudyFlowLocale.language,action,base,output.status);
     if(scenario==='exercise'){
       const waiting=action?.status==='awaiting_approval';
-      if(variant!==1){response={...response,body:output.reply,label:variant===3?'AUTO · giả định bị loại':waiting?'APPROVAL_REQUIRED':output.status,origin:'policy-simulation',followup:'',...(variant===3?{title:window.StudyFlowLocale.language==='en'?'AI solves it for you · answer hidden':'AI tự giải thay bạn · đáp án đã ẩn'}:{})};}
       if(waiting&&pendingHint?.id!==action.id)pendingHint={id:action.id,level:action.payload.level||1,response:base};
       else if(['rejected','cancelled','denied','undone'].includes(action?.status))pendingHint=null;
     }
@@ -295,12 +299,12 @@
     if(!pendingHint&&action.operation!=='hint_support')return;
     if(pendingHint?.id===action.id&&pendingHint.level===1)state={...state,response:pendingHint.response};
     else dispatch({type:'NEXT_HINT'});
-    pendingHint=null;if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;renderConversation();
+    pendingHint=null;if(messages.at(-1)?.kind==='assistant'){messages.at(-1).response=state.response;messages.at(-1).autonomyBase=state.response;}A.render();renderConversation();
   });
   window.addEventListener('studyflow-tool-stopped',event=>{
     if(pendingHint?.id!==event.detail.id)return;
     if(pendingHint.level===1){state={...state,response:{...state.response,label:window.StudyFlowLocale.t('Yêu cầu gợi ý đã dừng'),body:window.StudyFlowLocale.t('Yêu cầu chưa được thực hiện. Bạn có thể sửa câu hỏi, yêu cầu gợi ý phù hợp hoặc nhờ TA. Không có đáp số nào được xác nhận.')}};if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;}
-    pendingHint=null;renderConversation();
+    pendingHint=null;A.render();renderConversation();
   });
   window.addEventListener('studyflow-policy-change',()=>{pendingHint=null;if(LIVE&&busy){const pending=messages.at(-1);cancelPending();if(pending?.kind==='user'){messages.pop();const snapshot=undoStack.pop();if(snapshot){state={...snapshot.state,requests:state.requests,nextId:state.nextId};A.context(snapshot.autonomy.scenario,snapshot.autonomy.variant);}$('question').value=pending.text;updateComposer();}toast('Đã hủy lượt đang chạy khi đổi quyền. Bạn có thể gửi lại câu hỏi.');}renderConversation();});
   window.addEventListener('studyflow-demo-reset',()=>{

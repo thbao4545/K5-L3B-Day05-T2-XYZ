@@ -108,10 +108,20 @@ node --test prototype/tests/*.test.cjs
 | Ca | ① | ② | ③ |
 |---|---|---|---|
 | #5 | Bản nháp học viên mở; không gọi FAQ | Tự soạn cảnh báo, chờ giảng viên; Approve mới xuất hiện thẻ cả lớp | Thẻ cả lớp xuất hiện ngay trong giả định bị loại; gỡ không thu hồi nội dung đã đọc |
-| #2 | Chat đưa gợi ý giới hạn | Chat dừng, khóa gợi ý tiếp, mở thẻ duyệt; Reject/Cancel không thực thi | Chat giải thích bị chặn; khóa giải hộ, không hiện đáp số |
+| #2 | Chat đưa gợi ý giới hạn | Chat dừng, khóa gợi ý tiếp, mở thẻ duyệt; Reject/Cancel không thực thi | Chat hiển thị lời giải trực tiếp với lựa chọn/đáp án đã che; không tiết lộ kết quả thật |
 
 Khuyến nghị vẫn #5②/#2①. Marker thiết kế giữ nguyên. Reset Demo xóa luồng và chạy lại được. Ảnh `01-study-ux.png` và `02-autonomy.png` được chụp lại từ browser với annotation.
 
 ### Ca #2 phương án ③: AUTO giả định và giới hạn triển khai
 
 Quyền tool được hiển thị **AUTO trong giả định bị loại**, không đánh đồng tool với hành động con. UI hiện bản xem trước AI bỏ qua gợi ý, chọn cách giải và đưa kết luận ngay; lựa chọn/đáp án được che để không giải hộ bài đang mở. Chat và thẻ preview đổi ngay khi bấm ③. Trace riêng ghi hành động `final_solution`/`confirm_answer` bị hard guardrail chặn. Đây là sự khác biệt giữa “nếu bỏ giới hạn thì output trông thế nào” và “hành vi nào prototype thực sự cho thực thi”. Không đổi baseline của §4 hay dấu khuyến nghị ①.
+
+## Hội thoại học viên đồng bộ với quyền đang thử
+
+Panel trên là cấu hình/giả lập vai duyệt. Hội thoại dưới là **đúng phản hồi học viên nhìn thấy**, có nhãn ①/②/③ khớp phương án đang chọn. Hai phần đọc chung scenario, variant, action và status; không ghép đoạn mô tả kỹ thuật vào lời AI.
+
+- Ca #2: ① gợi ý và hỏi lại; ② nói đang chờ TA, rồi mở hướng dẫn khi duyệt hoặc báo chưa mở khi từ chối/hủy; ③ trả lời kiểu giải ngay với kết quả che trong chính bubble chat.
+- Ca #5: lời giải thích toán học giữ nguyên; bước tiếp theo và bản nháp trong chat đổi thành học viên tự báo / chờ duyệt / cảnh báo lớp mô phỏng. Approve, Reject, Cancel và gỡ cập nhật cả hai phần. Sửa bản nháp đồng bộ ngay với chat; nội dung đã công bố giữ snapshot đã duyệt.
+- Preview lời giải/FAQ chỉ xuất hiện trong chat, không lặp thêm bản thứ hai ở panel trên. Khuyến nghị cố định và marker HAX/PAIR được giữ.
+
+![Phản hồi học viên ca #2③, kết quả được che trong chính hội thoại](screenshots/03-student-view.png)

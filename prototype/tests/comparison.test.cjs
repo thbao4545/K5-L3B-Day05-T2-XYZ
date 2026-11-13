@@ -44,19 +44,26 @@ test('autonomy comparison outputs and compact presentation',{timeout:90000},asyn
    await page.addInitScript(profile=>{window.StudyFlowGenerated=profile;},profile);await page.reload();
    await choose('source-error');assert.match(await reply(),/waiting|chờ/i);assert.equal(await page.locator('.generated-badge').count(),0,'actual pending state takes precedence over a prepared follow-up');
    await choose('exercise');assert.match(await reply(),/order|thứ tự/);assert.doesNotMatch(await reply(),/11[.,]5|15[.,]25/);
-   await variant(3);assert.equal(await page.locator('.generated-badge').count(),0);assert.match(await reply(),/blocked|chặn/i);
+   await variant(3);assert.equal(await page.locator('.generated-badge').count(),0);assert.match(await reply(),/block|chặn/i);
   });
   await t.test('changing autonomy alone replays the workflow and changes the actual chat and audience UI',async()=>{
    await choose('source-error');assert.equal(await page.locator('.approval-card').count(),1,'recommended case5 starts the mock review workflow');
    await variant(1);assert.equal(await page.locator('#faq-draft').isVisible(),true);assert.equal(await page.locator('[data-autonomy="approve"]').count(),0);
-   await variant(3);assert.equal(await page.locator('.faq-preview').isVisible(),true);assert.match(await page.locator('.workflow-decision').innerText(),/hypothesis|giả định/i);
+   await page.locator('#faq-draft').fill('Nhờ giảng viên kiểm tra nguyên nhân câu sai trong §3.3.');assert.match(await page.locator('#conversation .learner-attachment').innerText(),/nguyên nhân câu sai/);
+   await variant(3);assert.equal(await page.locator('.faq-preview').isVisible(),true);assert.match(await page.locator('.assistant-card .faq-preview').innerText(),/hypothesis|giả định/i);
    await variant(2);assert.equal(await page.locator('.faq-preview').count(),0);assert.equal(await page.locator('[data-autonomy="approve"]').count(),1);
+   assert.equal(await page.locator('.assistant-card').last().getAttribute('data-learner-status'),await page.locator('#comparison-output').getAttribute('data-output-status'));
+   await page.locator('[data-disclosure="draft"] summary').click();await page.locator('#faq-draft').fill('Nội dung đã sửa trước duyệt: nhờ xác minh §3.3.');assert.match(await page.locator('.review-copy').innerText(),/đã sửa trước duyệt/);assert.match(await page.locator('#conversation .learner-attachment').innerText(),/đã sửa trước duyệt/);
+   await page.locator('[data-autonomy="approve"]').click();assert.match(await page.locator('#conversation .workflow-decision').last().innerText(),/approved|đã duyệt/i);assert.equal(await page.locator('#conversation .faq-preview').count(),1);
+   await page.locator('[data-autonomy="undo"]').click();assert.equal(await page.locator('#conversation .faq-preview').count(),0);
    await choose('exercise');await variant(2);assert.match(await page.locator('.assistant-card').last().innerText(),/waiting|chờ/i);
-   await variant(3);assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true);assert.match(await page.locator('.assistant-card').last().innerText(),/blocked|chặn/i);
-   assert.equal(await page.locator('.solution-preview').isVisible(),true);assert.match(await page.locator('.solution-preview').innerText(),/hidden|ẩn/i);assert.match(await page.locator('[data-autonomy="variant"][data-variant="3"]').innerText(),/AUTO/);
+   await variant(3);assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true);assert.match(await page.locator('.assistant-card').last().innerText(),/hidden|ẩn/i);
+   assert.equal(await page.locator('#conversation .solution-preview').isVisible(),true);assert.equal(await page.locator('#autonomy-content .solution-preview').count(),0);assert.equal(await page.locator('.assistant-card').last().getAttribute('data-learner-variant'),'3');assert.doesNotMatch(await page.locator('.answer-body').last().innerText(),/Nếu|Without|would|guardrail/i);assert.match(await page.locator('.solution-preview').innerText(),/hidden|ẩn/i);assert.match(await page.locator('[data-autonomy="variant"][data-variant="3"]').innerText(),/AUTO/);
    assert.equal(await page.locator('[data-recommended="true"]').getAttribute('data-variant'),'1');
    await variant(2);await page.locator('#question').fill('Bài 3 tôi nên bắt đầu ra sao?');await page.locator('#send-button').click();await page.waitForFunction(()=>!document.getElementById('conversation').hasAttribute('aria-busy'));
    await page.locator('[data-autonomy="approve"]').click();assert.doesNotMatch(await page.locator('.assistant-card').last().innerText(),/APPROVAL_REQUIRED|đang chờ TA duyệt|waiting for simulated TA approval/i);
+   assert.equal(await page.locator('.assistant-card').last().getAttribute('data-learner-status'),'executed');assert.equal(await page.locator('.learner-preview-heading strong').count(),1);
+   for(const width of [1440,390]){await page.setViewportSize({width,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);}
   });
   assert.deepEqual(errors,[]);
  }finally{await browser.close();}

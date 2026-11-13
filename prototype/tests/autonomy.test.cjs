@@ -74,3 +74,12 @@ test('rejected solve-it option separates hypothetical AUTO from the forbidden fi
  const s=A.initial('exercise',3);assert.equal(A.policy(s,'goi_y_bai_tap'),'AUTO');
  const action=latest(request(s,'goi_y_bai_tap','final_solution'));assert.equal(action.status,'denied');assert.equal(action.reason,'open_assignment');
 });
+test('learner-facing replies follow permission and review results, rather than narrating the comparison',()=>{
+ const base={body:'Giải thích có căn cứ.',followup:'Bạn đang vướng ở bước nào?',title:'Gợi ý',label:'Có căn cứ'};
+ const risky=A.learner(A.initial('exercise',3),'vi',null,base);assert.match(risky.body,/Mình sẽ giải/);assert.doesNotMatch(risky.body,/Nếu|Guardrail|FORBIDDEN/);assert.equal(risky.attachment.kind,'solution');
+ let s=request(A.initial('exercise',2),'goi_y_bai_tap','hint_support');assert.match(A.learner(s,'vi',latest(s),base).body,/Mình đang chờ TA/);
+ s=A.transition(s,{type:'APPROVE',id:latest(s).id,actor:'instructor',confirmed:true});s=A.transition(s,{type:'EXECUTE',id:latest(s).id});assert.doesNotMatch(A.learner(s,'vi',latest(s),base).body,/đang chờ/);
+ s=request(A.initial(),'dang_FAQ','publish',{text:'Bản nháp xác minh.'});assert.equal(A.learner(s,'vi',latest(s),base).attachment.kind,'draft');
+ s=A.transition(s,{type:'REJECT',id:latest(s).id,actor:'instructor'});assert.match(A.learner(s,'vi',latest(s),base).decision,/chưa được duyệt/);
+ assert.equal(A.learner(A.initial('source-error',1),'vi',{status:'drafted',payload:{text:''}},base).attachment.text,'');
+});

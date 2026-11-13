@@ -66,3 +66,9 @@ Luna live là tùy chọn có mạng qua cầu nối Node loopback, không datab
 Review bổ sung kiểm tra câu xác nhận ngắn “Đúng.”: blacklist không đủ bảo vệ bài đang mở. Đã thay toàn bộ câu trả lời/follow-up ca #2 bằng enum nội dung phương pháp đã duyệt, kiểm tra lại độc lập ngoài schema API. Luna vẫn chọn hướng theo từng câu hỏi; UI ghi rõ “gợi ý giới hạn”. Ca #5 giữ sinh phản hồi trực tiếp. Kiểm tra live/comparison sau sửa đều pass.
 
 Bổ sung preview ca #2③: tool hiển thị AUTO giả định, output giải ngay có phần kết quả đã che, hành động con final_solution vẫn denied. Unit regression phân biệt hai lớp; browser kiểm tra preview hiện khi chuyển ③, nút gợi ý bị khóa và khuyến nghị giữ ①.
+
+## Đồng bộ hội thoại học viên
+
+Đã chạy đầy đủ 51 kiểm tra, tất cả pass. Sau review bổ sung luồng sửa bản nháp thủ công, chạy lại 23 kiểm tra autonomy/comparison/live, tất cả pass. Unit kiểm tra lời AI dành cho học viên khác phần thuyết minh; browser đối chiếu data-learner-variant/status với lựa chọn và trạng thái trên panel, chờ/duyệt/từ chối/gỡ, sửa nháp, không lặp preview ở hai nơi, VI/EN, desktop 1440 và mobile 390.
+
+Preview lời giải và FAQ nằm trong chat. Không tiết lộ đáp án thật; không công bố FAQ hoặc gửi TA thật. Screenshot 03-student-view.png được mở kiểm tra trực quan. Landing và chính sách baseline không đổi.
