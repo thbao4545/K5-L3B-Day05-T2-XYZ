@@ -1,116 +1,82 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Prototype T2 · Ca #5 · tài liệu có thể sai</title>
-<style>
-:root{--ink:#1d2321;--mut:#6b6f6c;--line:#dcd8cf;--bg:#f6f4ef;--card:#fff;--g:#2e6a4f;--gb:#e5f1ea;--a:#8a6516;--ab:#fbefd3;--r:#a33b2b;--rb:#f8e3df;--b:#28507a;--bb:#e3ecf6}
-*{box-sizing:border-box}body{margin:0;font-family:"Be Vietnam Pro","Noto Sans","Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
-header{padding:18px 28px 10px;border-bottom:1px solid var(--line);background:#fff}
-h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mut);font-size:13.5px}
-.toggle{display:flex;gap:8px;margin:12px 0 4px;flex-wrap:wrap;align-items:center}
-.toggle span{font-size:13.5px;color:var(--mut);margin-right:4px}
-.toggle button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
-.toggle button.on{border-color:var(--ink);background:var(--ink);color:#fff}
-main{display:grid;grid-template-columns:400px 1fr;gap:24px;padding:20px 28px 28px;max-width:1280px}
-.phone{background:#fff;border:1px solid var(--line);border-radius:28px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.bar{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);padding:0 6px 8px;border-bottom:1px solid var(--line)}
-.ctx{margin:10px 4px;padding:10px 12px;border-radius:12px;background:var(--bb);font-size:13.5px}
-.ctx b{color:var(--b)}
-.chat{display:flex;flex-direction:column;gap:10px;padding:6px 4px;min-height:420px}
-.me{align-self:flex-end;background:var(--b);color:#fff;padding:9px 12px;border-radius:14px 14px 2px 14px;max-width:85%}
-.ai{align-self:flex-start;background:#f1efe9;padding:10px 12px;border-radius:14px 14px 14px 2px;max-width:94%}
-.ai .who{font-size:12px;color:var(--mut);margin-bottom:3px}
-.conf{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin:6px 0 2px;background:var(--ab);color:var(--a);font-weight:600}
-.ev{font-size:12.5px;color:var(--mut);border-left:3px solid var(--line);padding-left:8px;margin-top:6px}
-.box{border-radius:12px;padding:10px 12px;margin-top:8px;font-size:14px}
-.box.hold{background:var(--gb);border:1px solid #bcd9c8}.box.warn{background:var(--ab);border:1px solid #ecd59e}.box.done{background:var(--bb);border:1px solid #bcd0e6}.box.red{background:var(--rb);border:1px solid #e9bdb4}
-.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.btn{border:0;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;background:#e8e5de}
-.btn.pri{background:var(--g);color:#fff}.btn.out{background:#fff;border:1.5px solid var(--ink)}.btn.danger{background:var(--r);color:#fff}
-.timer{font-variant-numeric:tabular-nums;font-weight:700}
-.n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#c2410c;color:#fff;font-size:11.5px;font-weight:700;margin-right:4px;vertical-align:1px;flex:none}
-.hide-n .n{display:none}
-aside{display:flex;flex-direction:column;gap:16px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-.panel h2{font-size:16px;margin:0 0 8px}
-table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--mut);font-weight:600}
-.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
-.p-auto{background:var(--gb);color:var(--g)}.p-ask{background:var(--ab);color:var(--a)}.p-no{background:var(--rb);color:var(--r)}.p-sug{background:#eceae4;color:#555}
-.changed td{background:#fffaf0}
-.ann li{margin-bottom:5px}.ann{padding-left:0;list-style:none;margin:0}
-.promise{font-size:15px;border-left:4px solid var(--ink);padding:6px 10px;background:#faf9f5}
-label{font-size:14px}
-.foot{font-size:12px;color:var(--mut);padding:0 28px 20px}
-</style></head>
+<html lang="vi" data-type="software" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StudyFlow AI — prototype trợ lý học tập có nguồn, gợi ý có giới hạn và quyền kiểm soát cho học viên.">
+  <meta name="theme-color" content="#f5f7f5"><meta name="page-type" content="software"><meta name="site-kind" content="software">
+  <title>Buổi 3 · StudyFlow AI</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('studyflow-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('studyflow-language')==='en'?'en':'vi';}catch{}</script>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="themes.css">
+  <script src="engine.js" defer></script><script src="locale.js" defer></script><script src="autonomy.js" defer></script><script src="autonomy-ui.js" defer></script><script src="app.js" defer></script>
+</head>
 <body>
-<header>
- <h1>Prototype · T2 Giáo dục — ca #5: tài liệu buổi học có câu sai</h1>
- <div class="sub">Học viên nghi §3.3 sai lúc 22h, không còn ai để hỏi. Chỉ đổi <b>mức tự chủ của tool <code>dang_FAQ</code></b> (đăng cảnh báo tài liệu cho cả lớp) — câu trả lời chuyên môn giữ nguyên ở mọi mức. Dữ liệu dựng, không phải nội dung khoá học thật.</div>
- <div class="toggle"><span>Mức tự chủ của việc đăng cảnh báo tài liệu vào FAQ:</span>
-  <button data-l="1">① Chỉ gợi ý — học viên tự báo</button>
-  <button data-l="2" class="on">② Cần giảng viên duyệt</button>
-  <button data-l="3">③ Tự đăng + gỡ được</button>
-  <span style="margin-left:14px"><label><input type="checkbox" id="ann" checked> Hiện số chú thích HAX/PAIR</label></span>
- </div>
-</header>
-<main>
- <section class="phone" id="phone">
-  <div class="bar"><span>Trợ lý học bài · Nhập môn phân tích dữ liệu</span><span>22:12</span></div>
-  <div class="ctx"><b>Buổi 3 · Thống kê mô tả</b> · học viên đang học, Bài tập 3 đang mở (hạn 13/11 23:59). Giờ TA: 08:00–22:00 — <b>hiện ngoài giờ</b>.</div>
-  <div class="chat" id="chat"></div>
- </section>
- <aside>
-  <div class="panel"><h2>Lời hứa với khách ở mức này</h2><div class="promise" id="promise"></div></div>
-  <div class="panel"><h2>Mức tự chủ của 4 tool (dòng tô vàng là tool đang đổi)</h2>
-   <table><tr><th>Tool</th><th>Mức</th><th>Vì sao (cái giá khi sai)</th></tr><tbody id="tools"></tbody></table></div>
-  <div class="panel"><h2>Chú thích: nguyên tắc nào nằm ở đâu</h2><ul class="ann" id="ann-list"></ul></div>
- </aside>
-</main>
-<div class="foot">LAB5 · K5 L3B · Track T2 · prototype của nhóm XYZ, ca "tài liệu có thể sai". Một file HTML, không gọi AI thật.</div>
-<script>
-const $=s=>document.querySelector(s);let L=2,state='start',t=null,sec=0;
-const evid='<div class="ev"><span class="n">2</span>Dựa vào: tài liệu buổi 3 §3.3 "Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai" · quy tắc toán: √x &gt; x khi 0&lt;x&lt;1, nên câu trên chỉ đúng khi phương sai &gt; 1.</div>';
-const conf='<span class="conf"><span class="n">1</span>Mình chưa chắc: đây là lỗi đánh máy hay tài liệu có ý khác — bạn nên hỏi lại giảng viên để chắc</span>';
-const ansCore=`Mình xem lại §3.3: "Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai." Câu này <b>không đúng với mọi trường hợp</b> — chỉ đúng khi phương sai &gt; 1. Nếu phương sai nhỏ hơn 1 (ví dụ 0.25), độ lệch chuẩn (0.5) sẽ <b>lớn hơn</b> phương sai.${conf}${evid}`;
-function me(x){return `<div class="me">${x}</div>`}
-function ai(x){return `<div class="ai"><div class="who">Trợ lý học bài (AI)</div>${x}</div>`}
-const esc=`<button class="btn out" onclick="go('staff')"><span class="n">5</span>Chuyển TA</button>`;
-function render(){
- let h=me('Thầy/cô ơi, độ lệch chuẩn có thể lớn hơn phương sai không? Tài liệu em đọc nói nó luôn nhỏ hơn mà, em thấy lạ.');
- if(state=='staff'){h+=ai('Mình đã chuyển câu hỏi này cho TA, kèm tóm tắt: "học viên hỏi §3.3 có thể sai". Giờ TA: 08:00–22:00, hiện ngoài giờ — dự kiến TA trả lời <b>sáng mai</b>. Bạn không phải kể lại.');}
- else if(L==1){
-  h+=ai(`${ansCore}<div style="margin-top:6px"><span class="n">3</span>Câu này có thể nhiều bạn khác cũng đọc và hiểu nhầm.</div>
-  <div class="box warn">Mình <b>chỉ gợi ý</b>, chưa báo ai khác. Nếu muốn, bạn tự bấm báo lỗi cho giảng viên:</div>
-  <div class="btns"><button class="btn pri">Báo lỗi tài liệu cho giảng viên (bạn tự gửi)</button>${esc}</div>
-  <div class="box red" style="font-size:13px"><b>Rủi ro của mức này:</b> nếu học viên không bấm, các bạn khác đọc §3.3 vẫn tin câu sai — lỗi âm thầm không ai biết.</div>`);
- } else if(L==2){
-  if(state=='done'){h+=ai(`<div class="box done">Giảng viên đã duyệt. Cảnh báo về §3.3 đã lên FAQ cả lớp lúc 08:05 sáng nay.</div>`);}
-  else{
-  h+=ai(`${ansCore}<div style="margin-top:6px"><span class="n">3</span>Câu này có thể nhiều bạn khác cũng đọc và hiểu nhầm — mình soạn sẵn tin cảnh báo gửi giảng viên duyệt, chưa đăng cho ai thấy.</div>
-  <div class="box hold"><span class="n">4</span>Tin đã <b>gửi giảng viên, đang chờ duyệt</b> (ngoài giờ hành chính) — dự kiến duyệt vào <span class="timer" id="tm">08:00</span> sáng mai. Chưa đăng FAQ.</div>
-  <div class="box warn"><b>Nội dung chờ duyệt:</b> "Cảnh báo buổi 3 §3.3: câu 'độ lệch chuẩn luôn nhỏ hơn phương sai' có thể sai khi phương sai &lt; 1, đề nghị giảng viên xác nhận lại."
-  <div class="btns"><button class="btn pri" onclick="go('done')">(Demo) Giảng viên duyệt ngay</button><button class="btn" onclick="go('edit')"><span class="n">6</span>Sửa nội dung tin trước khi gửi</button>${esc}</div></div>`);}
- } else {
-  if(state=='undone'){h+=ai('Đã gỡ khỏi FAQ: tin cảnh báo quay về trạng thái soạn, chưa đăng. Bạn muốn sửa lại nội dung hay chuyển TA?'+`<div class="btns">${esc}</div>`);}
-  else{
-  h+=ai(`${ansCore}<div style="margin-top:6px"><span class="n">3</span>Mình đã <b>tự đăng cảnh báo lên FAQ cả lớp</b> ngay lúc 22:12, không chờ giảng viên.</div>
-  <div class="box done"><span class="n">4</span>Đã đăng. <b>Giảng viên gỡ được trong <span class="timer" id="tm">24:00</span></b> — sau đó khó thu hồi vì nhiều bạn đã đọc.
-  <div class="btns"><button class="btn out" onclick="go('undone')">Gỡ khỏi FAQ</button><button class="btn" onclick="go('undone')"><span class="n">6</span>Nội dung đăng chưa chuẩn</button>${esc}</div></div>
-  <div class="box red" style="font-size:13px"><b>Rủi ro của mức này:</b> nếu AI hiểu nhầm ý tài liệu (ví dụ §3.3 đúng trong ngữ cảnh riêng của bài giảng), cả lớp đã thấy một cảnh báo có thể sai trước khi giảng viên kịp xem — gỡ sau không cứu được người đã đọc.</div>`);}
- }
- $('#chat').innerHTML=h;
- const P={1:'"Mình cho bạn biết tài liệu có thể sai; bạn tự báo giảng viên." AI không đăng gì cho ai khác thấy. An toàn nhất, nhưng các bạn khác vẫn đang đọc câu sai trong lúc chờ.',
- 2:'"Mình soạn sẵn cảnh báo; giảng viên duyệt thì mới lên FAQ cả lớp." Trả lời riêng cho học viên thì AI tự làm; đăng công khai cho cả lớp thì chờ người duyệt. <b>Mức nhóm đề xuất.</b>',
- 3:'"Mình đăng cảnh báo lên FAQ ngay; giảng viên gỡ được nếu sai." Nhanh nhất cho cả lớp, nhưng AI tự khẳng định tài liệu sai thay giảng viên — chỉ đúng nếu AI đọc tài liệu không nhầm ý.'};
- $('#promise').innerHTML=P[L];
- const lv={1:['Gợi ý','p-sug','AI không đăng công khai; chỉ gợi ý học viên tự báo. Chậm nhưng không có rủi ro đăng nhầm.'],2:['Cần duyệt','p-ask','Đăng công khai cho cả lớp phải qua giảng viên: một lần duyệt chặn được cảnh báo sai lan ra; trả lời riêng cho học viên thì AI vẫn tự làm ngay.'],3:['Tự làm + gỡ được','p-auto','Chỉ hợp khi AI chắc chắn đọc đúng ý tài liệu; ở ca này tài liệu mơ hồ (lỗi đánh máy hay có ý khác?), nên là mức quá tay.']}[L];
- const T=[['tra_cuu_tai_lieu','Tự làm','p-auto','Chỉ đọc, trích nguyên văn §3.3 — không tự sửa câu tài liệu.'],['goi_y_bai_tap','Cần xác nhận','p-ask','Không dùng trong ca này; giữ mức cần duyệt vì ranh giới "gợi ý" và "giải hộ" mờ.'],['chuyen_TA','Tự làm','p-auto','Đảo được, chỉ tốn công TA đọc tóm tắt nếu không cần.'],['dang_FAQ',lv[0],lv[1],lv[2],1]];
- $('#tools').innerHTML=T.map(r=>`<tr class="${r[4]?'changed':''}"><td><code>${r[0]}</code></td><td><span class="pill ${r[2]}">${r[1]}</span></td><td>${r[3]}</td></tr>`).join('');
- const A=[['1','HAX G2 · làm rõ AI làm tốt tới đâu','Nhãn "mình chưa chắc" nói rõ AI không chắc đây là lỗi đánh máy hay tài liệu có ý khác.'],['2','HAX G11 · Explainability','Trích nguyên văn §3.3 kèm lập luận toán, để học viên tự kiểm chứng, không chỉ nghe AI nói.'],['3','Rubric domain #6 · tài liệu có thể sai','Nói rõ câu nào cần xem lại và vì sao, không khẳng định tài liệu đúng khi chưa kiểm.'],['4','HAX G8/G9 + PAIR Feedback & Control','Trạng thái "chờ duyệt" (mức ②) hoặc "gỡ được trong 24h" (mức ③) cho khách kiểm soát sau khi AI hành động.'],['5','PAIR Errors + Graceful Failure','Luôn có đường chuyển TA kèm tóm tắt, học viên không phải kể lại.'],['6','HAX G9 · sửa dễ','Sửa ngay trên thẻ: sửa nội dung tin hoặc gỡ khỏi FAQ, không phải bắt đầu lại.']];
- $('#ann-list').innerHTML=A.filter(a=>({1:['1','2','3','5'],2:['1','2','3','4','5','6'],3:['2','3','4','5','6']})[L].includes(a[0])).map(a=>`<li><span class="n">${a[0]}</span><b>${a[1]}</b> — ${a[2]}</li>`).join('')+(L==1?'<li style="color:#6b6f6c">Ở mức ① không có ④: AI không đăng gì, nên không có gì để chờ duyệt hay gỡ.</li>':L==3?'<li style="color:#6b6f6c">Ở mức ③ mất ①: AI không còn chỗ dừng lại hỏi trước khi đăng công khai — đó chính là chỗ mức này quá tay.</li>':'');
- clearInterval(t);const tm=$('#tm');if(tm){sec=L==2?28800:86400;t=setInterval(()=>{sec--;const hh=String(Math.floor(sec/3600)).padStart(2,'0'),mm=String(Math.floor(sec%3600/60)).padStart(2,'0');tm.textContent=hh+':'+mm;if(sec<=0)clearInterval(t)},1000)}
-}
-function go(s){state=s;render()}
-document.querySelectorAll('.toggle button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.toggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');L=+b.dataset.l;state='start';render()});
-$('#ann').onchange=e=>document.body.classList.toggle('hide-n',!e.target.checked);
-render();
-</script></body></html>
+  <a class="skip-link" href="#main">Đến nội dung học tập</a>
+  <svg class="icon-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c0 5-4 9-9 9 5 0 9 4 9 9 0-5 4-9 9-9-5 0-9-4-9-9Z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M12 5C8 2 4 3 2 4v15c4-2 7-1 10 2 3-3 6-4 10-2V4c-2-1-6-2-10 1Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m12 19 0-14m-6 6 6-6 6 6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l5-1L21 7l-5-5L4 14v6Z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3v1"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11a9 9 0 0 1-9 9H4l-2 2V11a9 9 0 0 1 19 0Z"/><path d="M7 10h10M7 14h6"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 4-6 6 6 6M3 10h10a7 7 0 0 1 0 14"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
+      <div class="sidebar-head"><a class="brand" href="landing.html"><span class="brand-mark"><svg><use href="#i-spark"/></svg></span>StudyFlow <span class="ai-label">AI</span></a><button class="icon-button mobile-only" data-action="close-menu" aria-label="Đóng điều hướng"><svg><use href="#i-close"/></svg></button></div>
+      <div class="workspace-label">KHÔNG GIAN HỌC TẬP</div>
+      <div class="course-name"><span class="course-icon"><svg><use href="#i-book"/></svg></span><div>Nhập môn<br>phân tích dữ liệu</div></div>
+      <div class="course-progress"><span>Buổi đang mở</span><strong>3 / 10</strong></div><div class="progress-track"><span></span></div>
+      <nav class="course-nav" aria-label="Buổi học">
+        <p class="nav-caption">NỘI DUNG KHOÁ HỌC</p>
+        <div class="lesson muted-lesson"><span class="lesson-number"><svg><use href="#i-check"/></svg></span><span>Buổi 1–2<small>Đã mở · chưa có tài liệu demo</small></span></div>
+        <button class="lesson active" data-action="study"><span class="lesson-number">03</span><span>Thống kê mô tả<small>Đang học</small></span><span class="active-dot"></span></button>
+        <div class="subnav"><button class="selected" data-action="study"><svg><use href="#i-spark"/></svg>Trợ lý học tập</button><button data-action="sources"><svg><use href="#i-book"/></svg>Tài liệu buổi 3</button></div>
+        <button class="lesson later" data-action="outline"><span class="lesson-number">04+</span><span>Các buổi tiếp theo<small>Chỉ xem đề cương</small></span><svg><use href="#i-chevron"/></svg></button>
+      </nav>
+      <div class="sidebar-bottom"><button data-action="queue" class="queue-nav"><svg><use href="#i-chat"/></svg>Hỗ trợ từ TA<span class="queue-count" id="queue-count">0</span></button><button data-action="policy" class="policy-nav"><svg><use href="#i-shield"/></svg>Quyền tự chủ của AI</button><div class="student"><span class="avatar">HV</span><div>Không gian học viên<small>Phiên demo · không đăng nhập</small></div></div></div>
+    </aside>
+    <div class="menu-scrim" id="menu-scrim" hidden></div>
+    <div class="workspace">
+      <header class="topbar"><div class="breadcrumbs"><button class="icon-button mobile-only" data-action="menu" aria-label="Mở điều hướng" aria-expanded="false"><svg><use href="#i-menu"/></svg></button><span>Khoá học</span><svg><use href="#i-chevron"/></svg><span>Buổi 3</span></div><div class="topbar-right"><div class="preferences" role="group" aria-label="Ngôn ngữ và giao diện"><button type="button" class="preference-button" id="language-toggle" aria-label="Switch to English">VI / EN</button><button type="button" class="preference-button" id="theme-toggle" aria-label="Switch to light theme" aria-pressed="true">Dark</button></div><span class="mock-badge"><span></span>Prototype mô phỏng</span><button class="icon-button" data-action="annotations" aria-label="Bật chú thích HAX và PAIR" aria-pressed="false"><span class="annotation-icon">i</span></button></div></header>
+      <div class="content-grid">
+        <main id="main" tabindex="-1">
+          <div class="page-heading"><div><p class="eyebrow">BUỔI 03 <span>/</span> TRỢ LÝ HỌC TẬP</p><h1>Thống kê mô tả<span class="heading-dot">.</span></h1><p class="heading-subtitle">Hiểu từng bước. Luôn biết mình đang dựa vào đâu.</p></div><span class="session-tag"><svg><use href="#i-book"/></svg>5 mục tài liệu</span></div>
+          <div class="session-tabs" role="group" aria-label="Chế độ học"><button class="tab active" data-action="study" id="study-tab"><svg><use href="#i-spark"/></svg>Cùng học với AI</button><button class="tab" data-action="queue" id="queue-tab"><svg><use href="#i-chat"/></svg>Hàng chờ TA<span id="tab-count">0</span></button><button class="tab source-tab" data-action="sources"><svg><use href="#i-book"/></svg>Nguồn</button></div>
+          <section id="study-view" aria-label="Trợ lý học tập">
+            <div class="capability-note"><svg><use href="#i-shield"/></svg><p><strong>Trợ lý giúp bạn hiểu bài, có giới hạn.</strong> Tra cứu buổi 3, gợi ý từng bước; không xác nhận đáp án bài đang mở. Mọi phản hồi đều soạn sẵn.</p></div>
+            <div class="demo-switcher"><div class="demo-label"><span class="tiny-dot"></span>HAI TÌNH HUỐNG TRỌNG TÂM<span>Chọn để chạy lại</span></div><div class="scenario-list" id="scenario-list"></div><details class="extra-scenarios"><summary>3 ca kiểm tra bổ sung</summary><div id="extra-scenarios"></div></details></div>
+            <details class="autonomy-panel" id="autonomy-panel"><summary>Autonomy / Tool Activity <span>4 tools · mock</span></summary><div id="autonomy-content"></div></details>
+            <div class="conversation" id="conversation" role="log" aria-label="Hội thoại học tập" aria-live="polite"></div>
+            <div class="composer-area"><div class="edit-banner" id="edit-banner" hidden><svg><use href="#i-edit"/></svg>Đang sửa câu hỏi · câu trả lời tiếp theo sẽ theo ý mới<button data-action="cancel-edit">Huỷ sửa</button></div><form id="question-form"><label for="question">Câu hỏi của bạn</label><div class="composer"><textarea id="question" name="question" rows="2" maxlength="1200" placeholder="Bạn đang vướng ở đâu trong buổi 3?" aria-describedby="composer-hint form-error"></textarea><button type="submit" id="send-button" class="send-button" aria-label="Gửi câu hỏi mô phỏng" disabled><svg><use href="#i-send"/></svg></button></div><div class="composer-footer"><span id="composer-hint">Enter để hỏi · Shift + Enter để xuống dòng</span><span id="char-count">0 / 1200</span></div><p class="form-error" id="form-error" role="alert" hidden></p></form><p class="simulation-disclaimer">Mô phỏng bằng fixture · Không gọi AI · Không gửi dữ liệu đến TA hoặc server</p></div>
+          </section>
+          <section id="queue-view" hidden aria-labelledby="queue-heading"><div class="queue-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2 id="queue-heading">Hàng chờ TA</h2></div><span class="mock-badge">Chỉ trong trình duyệt</span></div><div class="queue-notice"><svg><use href="#i-clock"/></svg><div><strong id="queue-ta-label"></strong><p id="queue-ta-detail"></p></div></div><div id="queue-list"></div></section>
+          <details class="annotation-legend" id="annotation-legend" hidden>
+            <summary>Chú thích của A · scenario #5 · HAX / PAIR</summary>
+            <div>
+              <p><b>① · HAX G2</b> Phản ví dụ toán học kiểm chứng được; chỉ nguyên nhân tài liệu viết sai là chưa rõ.</p>
+              <p><b>② · HAX G11 / Explainability</b> Nguyên văn §3.3, phản ví dụ 0,25 → 0,5 và nguồn mở được để tự kiểm tra.</p>
+              <p><b>③ · Rubric domain #6</b> Chỉ rõ câu cần xem lại và lý do; không mặc định tài liệu đúng.</p>
+              <p><b>⑤ · PAIR Errors + Graceful Failure</b> Đường nhờ TA có tóm tắt soạn sẵn, không bắt kể lại, không tuyên bố gửi thật.</p>
+              <p><b>④ · Xác nhận trước thao tác</b> Chỉ hiện tại modal duyệt yêu cầu TA. Chưa xác nhận thì chưa có hàng chờ.</p>
+              <p class="annotation-history">Vì sao mức ① của bản thử trước không có ④? Mức đó chỉ gợi ý học viên tự báo, không có bước AI đăng, chờ duyệt hoặc gỡ FAQ để đánh dấu. Bản này bỏ toggle tự đăng FAQ; ④ đánh dấu bước học viên xác nhận hàng chờ TA mô phỏng theo chính sách provisional, không phải phê duyệt FAQ.</p>
+              <p><b>⑥ · G9 / Recovery</b> Sửa ý, báo sai cục bộ và rút lượt; phản hồi sau thay đổi theo câu hỏi đã sửa.</p>
+              <p><b>⑦ · G10 / Graceful Failure</b> Ca thiếu nguồn nêu dữ liệu hiện có, hỏi lại thay vì đoán.</p>
+            </div>
+          </details>
+        </main>
+        <aside class="context-panel" aria-label="Tài liệu và ngữ cảnh"><div class="context-title"><span>GÓC TÀI LIỆU</span><svg><use href="#i-book"/></svg></div><div class="resource-cover"><span class="cover-kicker">NHẬP MÔN PHÂN TÍCH DỮ LIỆU</span><span class="cover-title">Thống kê<br>mô tả.</span><div class="cover-chart" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="cover-bottom"><span>TÀI LIỆU BUỔI 03</span><span>§3.1—3.5</span></div></div><div class="resource-items" id="resource-items"></div><button class="text-button all-sources" data-action="sources">Xem toàn bộ tài liệu<svg><use href="#i-arrow"/></svg></button><div class="assignment-card"><div class="assignment-top"><span>BÀI TẬP 3</span><span class="status-pill">Đang mở</span></div><h3>Tự làm để hiểu sâu hơn</h3><p>Hạn nộp: <strong>13/11 · 23:59</strong></p><div class="assignment-rule"><svg><use href="#i-shield"/></svg>AI chỉ gợi ý, không chốt đáp án.</div><button class="text-button" data-action="exercise">Bắt đầu với một gợi ý<svg><use href="#i-arrow"/></svg></button></div><div class="ta-card"><div class="ta-avatar"><svg><use href="#i-chat"/></svg><span id="ta-dot"></span></div><div><strong>Trợ giảng của lớp</strong><p id="ta-status">Đã hết giờ trực</p></div></div><p class="ta-hours">Giờ hỗ trợ: 08:00–22:00<br><span id="ta-next">Trở lại 14/11 lúc 08:00 · sau hạn bài 3</span></p><button class="text-button policy-link" data-action="policy">AI được tự làm những gì?<svg><use href="#i-arrow"/></svg></button><div class="demo-clock"><label for="demo-time"><svg><use href="#i-clock"/></svg>Thời gian giả lập · 13/11/2026</label><select id="demo-time"><option value="22:30">22:30 · TA hết ca</option><option value="21:10">21:10 · Trong giờ TA</option></select><p>Hạn bài giữ nguyên theo fixture.</p></div></aside>
+      </div>
+      <footer class="workspace-footer"><span>STUDYFLOW AI</span><span>AI20K · LAB 05 · TRACK T2</span><button data-action="reset">Bắt đầu hội thoại mới<svg><use href="#i-undo"/></svg></button></footer>
+    </div>
+  </div>
+  <dialog id="info-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow" id="dialog-eyebrow">NGỮ CẢNH HỌC TẬP</span><button class="icon-button" data-action="close-dialog" aria-label="Đóng cửa sổ"><svg><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+  <dialog id="ta-dialog" aria-labelledby="ta-dialog-title"><div class="dialog-top"><span class="eyebrow">BẠN LÀ NGƯỜI QUYẾT ĐỊNH <span class="marker" data-mark="4" aria-hidden="true">④</span></span><button class="icon-button" data-action="cancel-ta" aria-label="Huỷ yêu cầu TA"><svg><use href="#i-close"/></svg></button></div><h2 id="ta-dialog-title">Xem lại trước khi nhờ TA</h2><p class="dialog-intro">Bước xác nhận này chỉ tạo yêu cầu mô phỏng trong trình duyệt. Chưa có yêu cầu nào được tạo, không có dữ liệu gửi đi.</p><form id="ta-form"><label for="ta-question">Câu hỏi TA sẽ thấy trong mô phỏng</label><textarea id="ta-question" rows="4" maxlength="1200" required></textarea><div class="draft-context" id="draft-context"></div><div class="queue-notice"><svg><use href="#i-clock"/></svg><p id="ta-dialog-hours"></p></div><label class="consent-label"><input type="checkbox" id="ta-consent">Tôi đã xem nội dung và đồng ý tạo yêu cầu mô phỏng.</label><p class="form-error" id="ta-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="secondary-button" data-action="cancel-ta">Huỷ yêu cầu</button><button class="primary-button" id="confirm-ta" type="submit" disabled>Xác nhận · tạo mô phỏng<svg><use href="#i-arrow"/></svg></button></div></form></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body></html>
