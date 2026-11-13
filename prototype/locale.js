@@ -110,6 +110,15 @@
   add("Yêu cầu chưa được thực hiện. Bạn có thể sửa câu hỏi, yêu cầu gợi ý phù hợp hoặc nhờ TA. Không có đáp số nào được xác nhận.","The request was not executed. Edit your question, request safe guidance or ask a TA. No final answer was confirmed.");
   add("Chính sách đề xuất · baseline","Proposed baseline policy");
   add("Chỉ TA hoặc giảng viên được phê duyệt và công bố. Panel Autonomy mô phỏng bước duyệt; không có công bố thật.","Only an authorized TA or instructor can approve publication. The Autonomy panel simulates review; nothing is really published.");
+  add("Thử thay đổi quyền AI","Try different AI permissions");
+  add("2 ca · 3 phương án","2 cases · 3 alternatives");
+  add("Chọn một ca để bắt đầu học.","Choose a case to start learning.");
+  add("Chạy ca #5 hoặc #2 ở phía trên, rồi thử thay đổi quyền AI để so sánh phản hồi và cách xử lý.","Run case #5 or #2 above, then change AI permissions to compare the replies and actions.");
+  add("Chính sách nhóm · §4","Team policy · §4");
+  add("Chính sách nhóm tại §4. Các phương án so sánh không thay đổi khuyến nghị mặc định. Đáp số bài đang mở bị chặn ở mọi mức, kể cả sau phê duyệt. Mọi thao tác đều mô phỏng.","Team policy from section §4. Comparison alternatives do not change the recommended defaults. Open-assignment answers are blocked at every level, even after approval. All actions are simulated.");
+  add("AI tự chuyển khi học viên nhờ hỗ trợ","Automatic routing when the learner requests help");
+  add("Bạn xem và sửa nội dung trước khi chủ động tạo yêu cầu. Sau đó công cụ tự thêm vào hàng chờ mô phỏng, không chờ TA phê duyệt việc chuyển. Có thể hủy bản nháp hoặc rút yêu cầu.","Review and edit the message before submitting your request. The tool then adds it to the simulated queue automatically, without waiting for a TA to approve routing. Cancel the draft or withdraw the request.");
+  add("Queue TA lưu cục bộ trong trình duyệt; FAQ và nhật ký giữ trong lần mở trang. Không có TA, FAQ hay server thật.","The TA queue is local to this browser; FAQ notices and traces last for this page session. There is no real TA, FAQ or server.");
   const escapeRegExp=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   const embedded=[...pairs.keys()].filter(s=>s.length>=7).sort((a,b)=>b.length-a.length);
   const pattern=new RegExp(embedded.map(escapeRegExp).join('|'),'g');

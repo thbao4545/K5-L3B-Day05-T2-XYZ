@@ -23,12 +23,33 @@ test('reject and cancel never publish; approval cannot resurrect a rejected requ
  s=A.transition(s,{type:'APPROVE',id,actor:'instructor',confirmed:true});s=A.transition(s,{type:'EXECUTE',id});assert.equal(latest(s).result,null);
  s=request(s,'chuyen_TA','queue',{text:'Question'});const ta=latest(s).id;s=A.transition(s,{type:'CANCEL',id:ta});assert.equal(latest(s).status,'cancelled');
 });
-test('student must explicitly approve TA and only reversible actions may be undone',()=>{
+test('TA is AUTO after a student request, and only reversible actions may be undone',()=>{
  let s=request(A.initial(),'chuyen_TA','queue',{text:'Question'});const id=latest(s).id;
- s=A.transition(s,{type:'APPROVE',id,actor:'student',confirmed:false});assert.equal(latest(s).status,'awaiting_approval');
- s=A.transition(s,{type:'APPROVE',id,actor:'student',confirmed:true});s=A.transition(s,{type:'EXECUTE',id});assert.equal(latest(s).result,'queued_mock');
+ assert.equal(A.registry.chuyen_TA.policy,'AUTO');assert.equal(latest(s).status,'allowed');
+ s=A.transition(s,{type:'EXECUTE',id});assert.equal(latest(s).result,'queued_mock');
  s=A.transition(s,{type:'UNDO',id});assert.equal(latest(s).result,'withdrawn_mock');
  s=request(s,'goi_y_bai_tap','hint');const hint=latest(s).id;s=A.transition(s,{type:'EXECUTE',id:hint});s=A.transition(s,{type:'UNDO',id:hint});assert.equal(latest(s).status,'executed');
+});
+test('recommendations stay fixed while selected alternatives and reset change',()=>{
+ for(const scenario of ['source-error','exercise'])for(const variant of [1,2,3]){
+  const s=A.initial(scenario,variant),view=A.comparison(s,'vi');
+  assert.equal(view.recommended,scenario==='exercise'?1:2);assert.equal(view.selected,variant);
+  assert.equal(A.transition(s,{type:'RESET'}).variant,view.recommended);
+ }
+});
+test('six comparison outputs are distinct, bilingual and never reveal open assignment answers',()=>{
+ for(const lang of ['vi','en'])for(const scenario of ['source-error','exercise']){
+  const views=[1,2,3].map(v=>A.comparison(A.initial(scenario,v),lang));
+  assert.equal(new Set(views.map(v=>v.reply)).size,3);
+  for(const view of views){assert.ok(view.reply.length>50);assert.doesNotMatch(view.reply,/11[.,]5|15[.,]25|đáp án là trung vị|answer is the median/i);}
+ }
+});
+test('comparison output follows actual approval, rejection and removal state',()=>{
+ let s=request(A.initial(),'dang_FAQ','publish',{text:'Verify §3.3'});const id=latest(s).id;
+ assert.match(A.comparison(s,'vi',latest(s)).reply,/chờ.*duyệt/i);
+ const rejected=A.transition(s,{type:'REJECT',id,actor:'instructor'});assert.match(A.comparison(rejected,'vi',latest(rejected)).reply,/từ chối/i);
+ s=A.transition(s,{type:'APPROVE',id,actor:'instructor',confirmed:true});s=A.transition(s,{type:'EXECUTE',id});assert.match(A.comparison(s,'vi',latest(s)).reply,/đã duyệt/i);
+ s=A.transition(s,{type:'UNDO',id});assert.match(A.comparison(s,'vi',latest(s)).reply,/không.*thu hồi/i);
 });
 test('no policy or approval bypasses the open-assignment guardrail',()=>{
  for(const variant of [1,2,3]){

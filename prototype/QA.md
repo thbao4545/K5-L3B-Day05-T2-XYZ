@@ -1,10 +1,10 @@
 # Kiểm tra StudyFlow AI
 
-Thực hiện ngày 13/11/2026 (UTC+7). Trình duyệt Chrome headless qua Playwright; không có AI/TA thật.
+Thực hiện ngày 13/11/2026 (UTC+7). Trình duyệt Chrome headless qua Playwright; TA/FAQ mô phỏng. Luna tùy chọn chỉ chạy lúc chuẩn bị bản HTML.
 
 ## Phạm vi hành vi
 
-Lệnh: `node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs`, Playwright có sẵn qua `NODE_PATH`. Suite có 11 engine tests, 7 autonomy tests, 14 ca browser và test bao ngoài (33 mục trong báo cáo Node). Lượt kiểm tra hoàn tất: **33/33 pass, 0 fail**. Có kiểm tra riêng panel mở ở 390px bằng tiếng Anh, hủy gợi ý rồi yêu cầu lại và marker ca #2.
+Lệnh: `node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs prototype/tests/comparison.test.cjs prototype/tests/luna.test.cjs`, Playwright có sẵn qua `NODE_PATH`. Suite có 11 engine tests, 10 autonomy tests, 14 ca browser, 4 ca comparison, 2 kiểm tra Luna và hai test bao ngoài (43 mục trong báo cáo Node). Lượt kiểm tra hoàn tất: **43/43 pass, 0 fail**. Có kiểm tra riêng panel mở ở 390px bằng tiếng Anh, hủy gợi ý rồi yêu cầu lại và marker ca #2.
 
 | Nhóm | Những gì được kiểm tra |
 |---|---|
@@ -47,4 +47,10 @@ Ba WARN còn lại: copy dài hơn mức marketing do giữ nhãn mô phỏng/c�
 
 ## Giới hạn
 
-§4 chưa chốt nên quyền vẫn provisional, không coi brainstorm là quyết định cuối. Routing bằng fixture có thể không nhận cách hỏi mới; sẽ có fallback. Queue không sync nhiều tab/máy, không delivery hoặc trả lời thật. Không kiểm thử toàn bộ screen reader, zoom 200%, mọi browser hoặc máy cảm ứng thật. Shader là xấp xỉ ink, thiết bị yếu dùng CSS. GitHub Pages chưa được bật bởi PR.
+Đã đồng bộ §4 tại ee00f61. Phần cho duyệt đáp số xung đột hard guardrail nên không được triển khai; ghi rõ trong notes, không tự sửa §4. Routing bằng fixture có thể không nhận cách hỏi mới; sẽ có fallback. Queue không sync nhiều tab/máy, không delivery hoặc trả lời thật. Không kiểm thử toàn bộ screen reader, zoom 200%, mọi browser hoặc máy cảm ứng thật. Shader là xấp xỉ ink, thiết bị yếu dùng CSS. GitHub Pages chưa được bật bởi PR.
+
+## Đợt so sánh output và Luna tùy chọn
+
+Sáu output khác nhau, badge khuyến nghị giữ #5=②/#2=① dù đổi lựa chọn; nút về mặc định, trạng thái sau Approve/Reject/undo và diagnostics thu gọn được kiểm tra. Bản Luna dùng cấu hình từ ngân hàng gợi mở đã duyệt; generated HTML được kiểm tra trong browser với profile thử. Đã gọi OpenAI thật một lần thành công sau khi người dùng điền key, tạo luna-demo.html hợp lệ. Browser kiểm tra chính file thật: sáu phương án, badge cố định, mobile/Light/EN, không có HTTP/API request lúc demo. Test API tự động dùng test double; không suy ra SLA hoặc quota còn lại từ một lần thành công. `.env` và HTML tạo sẵn bị ignore, key không xuất vào trang.
+
+Reviewer độc lập không thấy lỗi important mới ở khuyến nghị cố định, sáu output, TA AUTO sau hành động học viên, guard enum Luna và luồng key. Copy-lint app hiện tại: 0 FAIL/0 WARN. Landing giữ nguyên, các giới hạn gate đã ghi ở trên vẫn tồn tại.

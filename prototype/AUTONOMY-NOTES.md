@@ -1,6 +1,6 @@
 # Ghi chú §4 — AI Autonomy của prototype
 
-**PROVISIONAL.** Đối chiếu `origin/master` 45ba989: `spec.md` §4 và §4 trong `spec_draft.md` chưa chốt; brainstorm cũng là tạm. Đây là phân tích triển khai để nhóm review, không tự điền quyết định hoặc ý kiến tranh luận của thành viên. Không sửa §1–§4/§6–§7 hay `spec_draft.md`.
+Đã đồng bộ `origin/master` **ee00f61**, §4 đã có quyết định nhóm. Ghi chú này mô tả prototype thực tế. Nhánh “TA duyệt đáp số/số liệu” trong §4 xung đột với yêu cầu cấm đáp án bài đang mở: guard tiếp tục chặn, không sửa nội dung của thành viên khác.
 
 ## Cái giá khi sai, đảo lại và chờ duyệt
 
@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | `tra_cuu_tai_lieu` | AUTO | Học viên có thể tin nguồn sai hoặc citation nhầm, đặc biệt §3.3 | Chỉ đọc; sửa cách trình bày được, không xóa kiến thức đã tiếp nhận | Duyệt mọi lần đọc làm học viên chờ vô ích. Cho tự đọc nhưng mở nguồn, cảnh báo mâu thuẫn, không tự sửa tài liệu |
 | `goi_y_bai_tap` | AUTO + hard guardrail | Học viên chép đáp án, mất cơ hội hiểu bài, ảnh hưởng đánh giá | Không thu hồi được đáp án đã đọc | Duyệt mọi gợi ý nhẹ cản trở học tối muộn. Cho hai mức định hướng, chặn đáp số/lựa chọn/nhận xét hộ trước khi hiển thị |
-| `chuyen_TA` | APPROVAL_REQUIRED — học viên | Chia sẻ câu hỏi ngoài ý muốn, tốn công TA, khiến học viên tin được hỗ trợ trước hạn | Rút yêu cầu cục bộ được; không hứa xóa điều TA đã đọc trong sản phẩm thật | Một lần xác nhận có chi phí nhỏ, giữ quyền chọn nội dung. Modal tóm tắt sẵn giảm gõ lại; ngoài giờ vẫn phải nói giờ trực và trạng thái |
+| `chuyen_TA` | AUTO sau yêu cầu chủ động của học viên | Chia sẻ câu hỏi ngoài ý muốn, tốn công TA, khiến học viên tin được hỗ trợ trước hạn | Rút yêu cầu cục bộ được; không hứa xóa điều TA đã đọc trong sản phẩm thật | Không chờ TA phê duyệt việc chuyển. Học viên xem/sửa rồi chủ động tạo request; modal là kiểm soát nội dung chia sẻ, khác policy APPROVAL_REQUIRED. Ngoài giờ vẫn báo giờ trực và trạng thái |
 | `dang_FAQ` | APPROVAL_REQUIRED — TA/giảng viên được ủy quyền | Sai một lần ảnh hưởng cả lớp; công bố cách diễn đạt quá mạnh dù phản ví dụ toán đúng | Gỡ bài dừng hiển thị tiếp, không thu hồi việc đã đọc | Chờ có thể kéo dài lỗi trong tài liệu, nhưng người có trách nhiệm cần kiểm tra cách công bố và nguyên nhân. Trả lời riêng vẫn có bằng chứng ngay, không đợi FAQ |
 
 Người duyệt FAQ thấy bản nháp nguyên văn với §3.3, phản ví dụ và mục đích xác minh; có thể sửa, Approve, Reject hoặc hủy. Người duyệt gợi ý chỉ duyệt hướng học an toàn. Học viên duyệt yêu cầu TA thấy câu hỏi/tóm tắt, nguồn, nhãn bằng chứng và mốc giờ, không kèm toàn bộ hội thoại. Không có người thật hoặc kiểm tra vai trò: đây là màn đóng vai người duyệt trong prototype.
@@ -39,3 +39,7 @@ Kiểm tra bình thường: so sánh trung bình/trung vị, đọc AUTO có cit
 ## Liên hệ chú thích
 
 ① G2 phân biệt điều biết/chưa biết; ② G11 mở bằng chứng; ③ domain #6/#3 bảo vệ đúng rủi ro; ④ Feedback & Control/Human-in-the-Loop gắn vào chờ/duyệt/từ chối/huỷ; ⑤ PAIR Graceful Failure chuyển người kèm tóm tắt; ⑥ G9 sửa/rút; ⑦ G10 hỏi lại khi thiếu nguồn. FAQ phương án ① không có ④ vì không gọi tool công bố; chuyển TA riêng vẫn có ④.
+
+## So sánh output và cấu hình Luna
+
+Khuyến nghị cố định #5=②/#2=①, độc lập lựa chọn đang thử. Output đổi theo sáu phương án và action thật; diagnostics thu gọn. Luna tùy chọn chỉ chuẩn bị focus của câu hỏi gợi mở từ enum đã duyệt, không thực thi tool hoặc nới hard guardrail. Generator cục bộ tạo HTML tĩnh; không cần backend/database.

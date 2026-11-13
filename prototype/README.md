@@ -10,28 +10,28 @@ Có thể mở trực tiếp `landing.html`, `index.html` hoặc **`index-ca2.ht
 
 App mặc định Dark, đồng bộ Onest, nền gần đen và cyan/blue/violet của landing. **VI / EN**, **Dark / Light** đổi ngay và lưu cục bộ, không xóa hội thoại. Nguồn nguyên văn tiếng Việt và câu hỏi người học được giữ nguyên. Landing giữ thiết kế Flowstate đã yêu cầu.
 
-## Chính sách đề xuất — PROVISIONAL
+## Chính sách nhóm §4 và hard guardrail
 
-Đã fetch và đối chiếu `origin/master` **45ba989**, cả `spec.md`, `spec_draft.md` và brainstorm. §4 vẫn là dàn ý chưa chốt. Đây là **cấu hình tạm để demo**, không phải quyết định chính thức thay nhóm; không tự ghi vào §4.
+Đã đồng bộ `origin/master` **ee00f61**. §4 hiện đã có chính sách nhóm: tra cứu AUTO, gợi ý AUTO giới hạn, chuyển TA AUTO, FAQ cần giảng viên duyệt. Riêng đoạn cho phép TA duyệt đáp số/số liệu của bài đang mở mâu thuẫn với hard guardrail bắt buộc của yêu cầu triển khai: prototype **vẫn cấm đáp số ở mọi mức**, không tự sửa §4 của thành viên khác.
 
 | Tool của đề bài | Baseline | Ai duyệt / giới hạn |
 |---|---|---|
 | `tra_cuu_tai_lieu` | AUTO | Chỉ đọc fixture, trích nguồn; không tự sửa tài liệu |
 | `goi_y_bai_tap` | AUTO trong giới hạn | Tối đa hai mức định hướng; không đáp số, lựa chọn cuối hoặc nhận xét hộ bài đang mở |
-| `chuyen_TA` | APPROVAL_REQUIRED | Học viên xem/sửa tóm tắt và xác nhận trước khi tạo hàng chờ mô phỏng |
+| `chuyen_TA` | AUTO | Học viên chủ động gửi nội dung đã xem/sửa; tool tự thêm vào queue mô phỏng, không chờ TA duyệt việc chuyển |
 | `dang_FAQ` | APPROVAL_REQUIRED | TA/giảng viên được ủy quyền duyệt nội dung trước khi công bố mô phỏng |
 
 `xac_nhan_dap_so` là **hành động con bị cấm**, không phải tool thứ năm. Phê duyệt không vô hiệu hóa hard guardrail của bài đang mở. Không có quyền tự sửa tài liệu. Trong chế độ so sánh, các dòng quyền thay đổi theo phương án đang chọn; nút chính sách ở sidebar luôn mô tả baseline.
 
-**①/②/③ là phương án thiết kế, không tương ứng 1:1 với AUTO/APPROVAL_REQUIRED/FORBIDDEN.** Các mức chính thức hiển thị riêng cạnh từng tool. Phương án không dùng tool được ghi FORBIDDEN trong phạm vi so sánh; không biến thành quyết định chính thức của nhóm.
+**①/②/③ là phương án thiết kế, không tương ứng 1:1 với AUTO/APPROVAL_REQUIRED/FORBIDDEN.** Dấu **Khuyến nghị** cố định ở **#5 → ②**, **#2 → ①**; viền chọn chỉ biểu thị phương án đang thử. Nút **Về khuyến nghị** phục hồi lựa chọn mà không dời dấu mặc định. Thẻ **Output AI** đổi câu trả lời dự kiến theo lựa chọn; chỉ bấm **Chạy mô phỏng** mới thực hiện action. Sau đó output phản ánh thật trạng thái chờ/duyệt/từ chối/hủy/gỡ. Bảng bốn tool, bản nháp và trace thu gọn để ưu tiên output. Các mức chính thức hiển thị riêng cạnh từng tool. Phương án không dùng tool được ghi FORBIDDEN trong phạm vi so sánh; không biến thành quyết định chính thức của nhóm.
 
 ## Demo ca #5 — tài liệu §3.3 sai
 
 1. Chọn **#5**. Sau loading mô phỏng, AI trích nguyên văn câu “Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai.”
 2. Xem phản ví dụ **phương sai 0,25 → độ lệch chuẩn 0,5** và giải thích khác đơn vị. Kết luận toán kiểm chứng được; chỉ nguyên nhân lỗi biên soạn là chưa rõ. Citation **§3.3** mở nguyên văn để đối chiếu.
-3. Mở **Autonomy / Tool Activity**. Mặc định phương án **② — Duyệt trước khi đăng**. Sửa bản nháp → **Tạo bản nháp chờ duyệt**. Chưa Approve thì chưa có `published_mock`.
+3. Mở **Autonomy / Tool Activity**. Mặc định phương án **② — Duyệt trước khi đăng**. Sửa bản nháp → **Chạy mô phỏng · chờ duyệt**. Chưa Approve thì chưa có `published_mock`.
 4. Vai giảng viên **mô phỏng** có **Approve**, **Reject**, **Hủy trước thực thi**. Reject/cancel không đăng. Approve mới chuyển `executed · published_mock`. Không có đăng thật hoặc kiểm tra danh tính người duyệt; mọi người xem demo có thể đóng vai này.
-5. **Gỡ cảnh báo mô phỏng** chỉ dừng hiển thị tiếp: không thu hồi được điều người khác đã đọc. **Kiểm tra chặn tự đăng** cho thấy `denied` trong policy cần duyệt.
+5. **Gỡ cảnh báo mô phỏng** chỉ dừng hiển thị tiếp: không thu hồi được điều người khác đã đọc. **Thử tự đăng → bị chặn** cho thấy `denied` trong policy cần duyệt.
 6. So sánh **① — Học viên tự báo**: soạn nội dung cục bộ, không gọi `dang_FAQ`; nếu học viên không báo thì cả lớp có thể tiếp tục học nhầm. **③ — Tự đăng** có nhãn **giả định bị loại**, chỉ minh họa công bố/gỡ trong prototype, không khuyến nghị triển khai thật.
 
 ## Demo ca #2 — bài đang mở
@@ -71,6 +71,20 @@ Mặc định tắt để giữ màn học gọn. Bật **i** ở thanh đầu t
 
 ![Autonomy ca #5: bốn tool, phương án ②, bản nháp và marker ④ chờ giảng viên duyệt](screenshots/02-autonomy.png)
 
+## Luna 6 tùy chọn — không backend/database
+
+Bản mặc định vẫn mở bằng `Open-Demo.cmd`, không key, không mạng. Nếu muốn dùng OpenAI để chuẩn bị một bản demo:
+
+1. Mở **`.env` ở gốc repository**, điền `OPENAI_API_KEY`; `OPENAI_MODEL=gpt-6-luna` đã đặt sẵn. Máy này đã có file trống và Git bỏ qua. Người clone mới sao chép `.env.example` thành `.env`.
+2. Bấm đúp **`prototype/Generate-Luna-Demo.cmd`** (hoặc chạy `.ps1`). Cần Node 22+ và mạng cho đúng một lần tạo. Script đọc key trên máy, gọi Responses API rồi mở **`prototype/luna-demo.html`**.
+3. Bản HTML đã tạo chạy tĩnh/offline và vẫn bấm qua hai ca, mọi phương án, approval/reset. Không có request API khi xem demo. Muốn đổi cấu hình gợi mở thì chạy script lại; lỗi mạng/key/quota không ghi đè bản trước.
+
+**LLM làm gì:** Luna tạo cấu hình chọn hướng câu hỏi gợi mở cho sáu ô workflow qua JSON schema enum. UI ghép câu hỏi từ ngân hàng đã duyệt và ghi **Luna · gợi mở đã tạo sẵn**. Model không tự viết đáp số hoặc hành động, không thay toán học/citation, recommendation, policy hay trạng thái phê duyệt. Đây là tạo cấu hình workflow, không phải chat live hoặc model tự quyết định quyền. Dữ liệu gửi là sáu tình huống dựng; không gửi hội thoại người học hay dãy lương bài tập.
+
+`.env`, HTML được tạo và file tạm đều bị Git ignore. Key không có trong HTML/JS của trình duyệt. Repo chỉ giữ `.env.example` trống. Generator dùng `store:false`, giới hạn output và timeout; điều này không phải cam kết về mọi chính sách lưu dữ liệu của nhà cung cấp. Đã chạy một lần gọi OpenAI thật thành công bằng key cục bộ sau khi người dùng điền. Test tự động vẫn dùng test double; đã mở bản HTML được tạo thật và kiểm tra không có HTTP/API request khi demo.
+
+Đối chiếu [model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), [Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create), [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) và [giữ key ở môi trường cục bộ](https://developers.openai.com/api/reference/overview#authentication).
+
 ## State, mock và mã nguồn
 
 `autonomy.js` là registry và guard dùng chung: `requested → evaluating → allowed / awaiting_approval / denied → executed / cancelled`; người duyệt có thể `rejected`, hành động hợp lệ có thể `undone`. Trace ghi lịch sử quyết định, actor, policy, kết quả `read_mock / hint_mock / queued_mock / published_mock` và lý do bị chặn. Đổi ca/phương án hủy các hành động đang chờ, không tự duyệt. Không hoàn tác gợi ý đã đọc.
@@ -81,12 +95,12 @@ Mặc định tắt để giữ màn học gọn. Bật **i** ở thanh đầu t
 - `styles.css`, `themes.css`, `locale.js`, `assets/`: responsive, Dark/Light, VI/EN, SVG, Onest và SIL OFL.
 - `landing.html`: HTML độc lập, nhúng font/CSS/JS; shader ink tự viết với idle/pointer/burst, pause/reduced-motion và CSS fallback. Xấp xỉ thị giác fluid, không phải solver Navier–Stokes hay mã sao chép Pavel Dobryakov.
 
-**Không backend, database, authentication, API key, LLM, agent hoặc endpoint giả.** Toàn bộ phản hồi, thời gian, thao tác và vai phê duyệt là mô phỏng. Queue TA lưu localStorage theo origin/trình duyệt; tối đa 5 yêu cầu chờ, chỉ dọn lịch sử đã rút. Nếu không lưu được thì giữ trong bộ nhớ và thông báo. FAQ, phê duyệt và trace chỉ giữ trong lần mở trang, mất khi reload; không có đồng bộ hoặc SLA. Chỉ nhập dữ liệu dựng.
+**Web demo không backend, database, authentication, LLM live, agent hoặc endpoint giả.** Generator OpenAI tùy chọn chạy trước khi demo, tách khỏi trang web. Toàn bộ phản hồi, thời gian, thao tác và vai phê duyệt là mô phỏng. Queue TA lưu localStorage theo origin/trình duyệt; tối đa 5 yêu cầu chờ, chỉ dọn lịch sử đã rút. Nếu không lưu được thì giữ trong bộ nhớ và thông báo. FAQ, phê duyệt và trace chỉ giữ trong lần mở trang, mất khi reload; không có đồng bộ hoặc SLA. Chỉ nhập dữ liệu dựng.
 
 Chạy kiểm tra từ repo (chỉ môi trường dev cần Node, Playwright, Chrome):
 
 ```text
-node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs
+node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs prototype/tests/comparison.test.cjs prototype/tests/luna.test.cjs
 ```
 
 **UI UX Pro Max** và **Taste `design-taste-frontend`** đã có global, được đọc và áp dụng cho design system, accessibility, phong cách, responsive và browser inspection; không cài lại hoặc đưa source skills vào repo. Xem [QA.md](QA.md) cho bằng chứng và giới hạn gate; [AUTONOMY-NOTES.md](AUTONOMY-NOTES.md) là ghi chú kỹ thuật để nhóm viết §4, không giả lập ý kiến của thành viên.

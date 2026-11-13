@@ -83,9 +83,10 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
       assert.equal(await page.evaluate(()=>window.HACKED),undefined);
       assert.match(await lastAnswer().innerText(),/prototype dùng từ khoá/);
     });
-    await t.test('daytime fixture and provisional policy, no FAQ publish action',async()=>{
+    await t.test('daytime fixture and team policy, no real FAQ publish action',async()=>{
       await page.locator('#demo-time').selectOption('21:10');assert.match(await page.locator('#ta-status').innerText(),/Trong giờ/);
-      await page.locator('[data-action="policy"]').first().click();assert.match(await page.locator('#info-dialog').innerText(),/PROVISIONAL/);
+      await page.locator('[data-action="policy"]').first().click();assert.match(await page.locator('#info-dialog').innerText(),/§4/);
+      assert.match(await page.locator('#info-dialog').innerText(),/AI tự chuyển/);
       assert.match(await page.locator('#info-dialog').innerText(),/Cần TA \/ giảng viên phê duyệt/);await page.keyboard.press('Escape');
       await page.locator('#demo-time').selectOption('22:30');
     });
@@ -115,7 +116,7 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
     });
     await t.test('FAQ comparison really drafts, approves, rejects, blocks and removes mock publication',async()=>{
       await page.setViewportSize({width:1440,height:1000});await scenario('source-error');
-      await page.locator('#autonomy-panel summary').first().click();
+      if(!await page.locator('#autonomy-panel').evaluate(e=>e.open))await page.locator('#autonomy-panel>summary').click();
       await page.locator('[data-autonomy="variant"][data-variant="1"]').click();
       await page.locator('[data-autonomy="manual"]').click();assert.equal(await page.locator('#faq-draft').isVisible(),true);
       assert.equal(await page.locator('.trace-item').filter({hasText:'dang_FAQ'}).count(),0,'manual-report option must not call FAQ tool');

@@ -82,7 +82,7 @@
       </div></article>`;
   }
   function welcome() {
-    return `<div class="welcome"><div class="welcome-orbit" aria-hidden="true"></div><div class="welcome-mark">${icon('spark')}</div><h2>Một chút tò mò.<br>Một bước hiểu sâu hơn.</h2><p>Mình có thể cùng bạn đọc tài liệu buổi 3, phân biệt khái niệm và tìm bước bắt đầu cho bài tập.</p><div class="welcome-prompts"><button class="prompt-card" data-action="sample" data-sample="0"><span>Trung vị hay trung bình?<small>Hiểu khái niệm qua hai cách nhìn</small></span>${icon('arrow')}</button><button class="prompt-card" data-action="sample" data-sample="2"><span>Nếu tài liệu cũng có thể sai?<small>Cùng kiểm tra một phát biểu ở §3.3</small></span>${icon('arrow')}</button></div></div>`;
+    return `<div class="welcome"><h2>Chọn một ca để bắt đầu học.</h2><p>Chạy ca #5 hoặc #2 ở phía trên, rồi thử thay đổi quyền AI để so sánh phản hồi và cách xử lý.</p></div>`;
   }
   function renderConversation() {
     const container = $('conversation');
@@ -155,7 +155,7 @@
     openInfo(ids.length===1?'Nguồn trích dẫn · §'+ids[0]:'Tài liệu buổi 3',`<p class="dialog-intro">Fixture T2 · Thống kê mô tả. Tài liệu chỉ có mục §3.1–§3.5, không có slide đánh số.</p>${ids.map(id=>{const s=E.fixtures.sections[id];return `<section class="source-section"><h3>§${id} · ${esc(s.title)}</h3><p data-fixture-source>${esc(s.text)}</p>${s.warning?`<div class="warning-callout">${esc(s.warning)} Nên nhờ TA hoặc giảng viên kiểm tra; chưa có xác minh trong demo.</div>`:''}</section>`}).join('')}<p class="source-origin">Nguồn: tracks/t2-education.md · Dữ liệu dựng của đề bài AI20K.</p>`,'ĐỐI CHIẾU NGUỒN · G11');
   }
   function showPolicy() {
-    openInfo('Chính sách đề xuất · baseline', `<p class="dialog-intro">PROVISIONAL · Chính sách tạm cho prototype vì §4 chưa được nhóm chốt. Brainstorm chưa phải quyết định chính thức. Không có tool thật được thực thi.</p><table class="policy-table"><thead><tr><th>Tool mô phỏng</th><th>Ai quyết định · giới hạn</th></tr></thead><tbody><tr><td><code>tra_cuu_tai_lieu</code></td><td><strong>AI tự làm · chỉ đọc</strong><p>Học viên xem nguồn và rút lượt hỏi. Nguồn vẫn có thể sai.</p></td></tr><tr><td><code>goi_y_bai_tap</code></td><td><strong>AI tự làm trong giới hạn</strong><p>Tối đa hai mức định hướng; không đáp số, xác nhận hoặc nhận xét hộ bài đang mở. Gợi ý đã xem không thể “chưa đọc”, nên giới hạn nằm trong logic.</p></td></tr><tr><td><code>chuyen_TA</code></td><td><strong>Học viên phải xác nhận</strong><p>Xem và sửa câu hỏi; xem mục nguồn, nhãn bằng chứng, thời điểm và giờ trực. Huỷ trước xác nhận hoặc rút khỏi hàng chờ sau đó.</p></td></tr><tr><td><code>dang_FAQ</code></td><td><strong>Cần TA / giảng viên phê duyệt</strong><p>Chỉ TA hoặc giảng viên được phê duyệt và công bố. Panel Autonomy mô phỏng bước duyệt; không có công bố thật.</p></td></tr></tbody></table><div class="queue-notice">${icon('clock')}<p>${esc(E.taAvailability(state.clock).detail)} Nếu không ai duyệt, giữ trạng thái chờ; AI không tự nâng quyền.</p></div><p class="source-origin">Mọi hàng chờ là localStorage của trình duyệt. Không có TA, FAQ hay server thật.</p>`,'CHÍNH SÁCH TỰ CHỦ · MÔ PHỎNG');
+    openInfo('Chính sách nhóm · §4', `<p class="dialog-intro">Chính sách nhóm tại §4. Các phương án so sánh không thay đổi khuyến nghị mặc định. Đáp số bài đang mở bị chặn ở mọi mức, kể cả sau phê duyệt. Mọi thao tác đều mô phỏng.</p><table class="policy-table"><thead><tr><th>Tool mô phỏng</th><th>Ai quyết định · giới hạn</th></tr></thead><tbody><tr><td><code>tra_cuu_tai_lieu</code></td><td><strong>AI tự làm · chỉ đọc</strong><p>Học viên xem nguồn và rút lượt hỏi. Nguồn vẫn có thể sai.</p></td></tr><tr><td><code>goi_y_bai_tap</code></td><td><strong>AI tự làm trong giới hạn</strong><p>Tối đa hai mức định hướng; không đáp số, xác nhận hoặc nhận xét hộ bài đang mở. Gợi ý đã xem không thể “chưa đọc”, nên giới hạn nằm trong logic.</p></td></tr><tr><td><code>chuyen_TA</code></td><td><strong>AI tự chuyển khi học viên nhờ hỗ trợ</strong><p>Bạn xem và sửa nội dung trước khi chủ động tạo yêu cầu. Sau đó công cụ tự thêm vào hàng chờ mô phỏng, không chờ TA phê duyệt việc chuyển. Có thể hủy bản nháp hoặc rút yêu cầu.</p></td></tr><tr><td><code>dang_FAQ</code></td><td><strong>Cần TA / giảng viên phê duyệt</strong><p>Chỉ TA hoặc giảng viên được phê duyệt và công bố. Panel Autonomy mô phỏng bước duyệt; không có công bố thật.</p></td></tr></tbody></table><div class="queue-notice">${icon('clock')}<p>${esc(E.taAvailability(state.clock).detail)} Nếu không ai duyệt, giữ trạng thái chờ; AI không tự nâng quyền.</p></div><p class="source-origin">Queue TA lưu cục bộ trong trình duyệt; FAQ và nhật ký giữ trong lần mở trang. Không có TA, FAQ hay server thật.</p>`,'CHÍNH SÁCH TỰ CHỦ · MÔ PHỎNG');
   }
   function showOutline() {
     openInfo('Đề cương các buổi tiếp theo',`<p class="dialog-intro">Buổi 1–3 đã mở. Demo chỉ có nội dung buổi 3; các buổi sau chỉ có tên trong đề cương.</p>${E.fixtures.lessons.slice(3).map((name,i)=>`<div class="outline-item"><span>BUỔI ${i+4}</span>${esc(name)}</div>`).join('')}<p class="source-origin">Không có nội dung chi tiết các buổi 4–10 trong fixture.</p>`);
@@ -166,7 +166,7 @@
   function draftTA() {
     if (!state.question) {toast('Hãy hỏi một câu trước khi tạo bản nháp hỗ trợ.');return;}
     if (state.requests.filter(r=>r.status==='waiting').length>=5) {toast('Đã có 5 yêu cầu mô phỏng đang chờ. Bạn có thể rút một yêu cầu trong hàng chờ.');return;}
-    dispatch({type:'DRAFT_TA'}); taActionId=A.request('chuyen_TA','queue',{text:state.draft.question},false).id; lastTrigger=document.activeElement;
+    dispatch({type:'DRAFT_TA'}); taActionId=null; lastTrigger=document.activeElement;
     // Translate generated context only. The learner's original wording stays verbatim.
     const draftText=state.draft.question, separator='Câu hỏi gốc: ';
     const boundary=state.response?.warning ? draftText.indexOf(separator) : -1;
@@ -234,7 +234,7 @@
   $('ta-form').addEventListener('submit',e=>{
     e.preventDefault();dispatch({type:'EDIT_DRAFT',question:$('ta-question').value});const before=state.requests.length;
     if(!$('ta-consent').checked||!state.draft?.question.trim()){return;}
-    const approved=A.approve(taActionId,'student',state.draft.question);
+    const approved=A.request('chuyen_TA','queue',{text:state.draft.question});taActionId=approved.id;
     if(approved?.status!=='executed'){return;}
     dispatch({type:'CONFIRM_TA',consent:$('ta-consent').checked});
     if(state.requests.length===before){$('ta-error').hidden=false;$('ta-error').textContent='Kiểm tra câu hỏi và ô xác nhận trước khi tạo mô phỏng.';return;}
