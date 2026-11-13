@@ -2,9 +2,13 @@
 
 Prototype trợ lý học bài trong khóa **Nhập môn phân tích dữ liệu**, buổi 3 **Thống kê mô tả**. Hai ca chính giữ số của brainstorm và hai HTML gốc: **#5 tài liệu sai** và **#2 xin xác nhận đáp án bài đang mở**. HTML/CSS/JavaScript không build step. Bản fixture chạy tĩnh; chế độ Luna trực tiếp dùng cầu nối Node trên máy, không database.
 
-## Mở bằng một lần bấm
+## Mở demo — chọn đúng chế độ
 
-Bấm đúp **`Open-Demo.cmd`** trong thư mục này → landing → **Bắt đầu học**. Không cần bash, server, thư viện hay đăng nhập. `Start-Demo.ps1` là launcher PowerShell tương đương; Windows thường mở `.ps1` bằng editor, vì vậy `.cmd` thuận tiện hơn cho thao tác bấm đúp.
+**Demo Luna trực tiếp cần API key OpenAI hợp lệ**, Node.js 22+ và Internet. Sao chép `.env.example` ở gốc repo thành `.env`, điền `OPENAI_API_KEY`, giữ `OPENAI_MODEL=gpt-6-luna`, rồi bấm đúp **`Open-Live-Demo.cmd`** trong thư mục này. Launcher tự chạy cầu nối Node và mở [trợ lý](http://127.0.0.1:5180/index.html). Muốn vào từ đầu, mở [landing](http://127.0.0.1:5180/landing.html) rồi bấm **Bắt đầu học**. Link chỉ hoạt động trên máy đang chạy launcher.
+
+**Key không đi kèm repo, không được commit và không điền vào HTML.** Chỉ mở HTML hoặc điền key mà chưa chạy launcher live thì không gọi Luna. Xem [README ở gốc repo](../README.md) để thiết lập từng bước và nhận biết phản hồi API/fixture.
+
+**Bản không key:** bấm đúp **`Open-Demo.cmd`** → landing → **Bắt đầu học**. Bản này dùng fixture, không cần server hoặc LLM; các luồng autonomy vẫn hoạt động. `Start-Demo.ps1` là launcher tương đương. Windows thường mở `.ps1` bằng editor, nên dùng `.cmd` để bấm đúp.
 
 Có thể mở trực tiếp `landing.html`, `index.html` hoặc **`index-ca2.html`**. Entry ca #2 dẫn tới `index.html#exercise`, dùng cùng giao diện và policy engine để tránh hai bản lệch quyền. Ba phương án của hai prototype gốc được đưa vào panel **Autonomy / Tool Activity**, không giữ các đường lộ đáp án trong HTML cũ. Nếu host tĩnh, giữ các file cùng thư mục; PR không tự bật GitHub Pages.
 
