@@ -4,9 +4,9 @@
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
-| Từ Huy Bảo | 2A202604021 |  |
-| Chu Nguyễn Tùng Dương | 2A202604016 |  |
-| Nguyễn Hữu An | 2A202604024 |  |
+| Từ Huy Bảo | 2A202604021 | Khởi tạo bộ bài nộp và dựng prototype ban đầu cho hai tình huống: học viên xin xác nhận đáp số bài đang mở (#2) và phát hiện câu sai trong tài liệu buổi 3 (#5). Tổng hợp nội dung nhóm vào spec, hoàn thiện các phần về cách xử lý khi AI sai, mức tự chủ và tiêu chí đánh giá. Trực tiếp demo sản phẩm trước lớp. |
+| Chu Nguyễn Tùng Dương | 2A202604016 | Phát triển prototype StudyFlow để nhóm có thể chạy lại cùng một kịch bản và so sánh phản hồi ở từng mức tự chủ. Đồng bộ nội dung hội thoại với thao tác duyệt, từ chối hoặc hủy của người dùng. Bổ sung chú thích giải thích các quyết định thiết kế, tích hợp Luna và viết hướng dẫn cấu hình khóa API để chạy demo. |
+| Nguyễn Hữu An | 2A202604024 | Soạn bản nháp spec và xác định phạm vi hỗ trợ học viên ở §1, gồm giới hạn khi gợi ý bài đang mở và quyền chuyển câu hỏi cho TA. Ở §2, phân loại các tình huống theo lớp rủi ro và mức hại, mô tả lỗi AI có thể mắc cùng phản hồi mong đợi. Giải thích vì sao nhóm ưu tiên nguy cơ lộ đáp số (#2) và học sai từ tài liệu (#5), sau khi cân nhắc ca báo xác nhận hoặc chuyển TA giả (#9). |
 
 > *(Điền tên, mã học viên, và việc mỗi người làm trước khi nộp — TA/giảng viên hỏi bất kỳ thành viên lúc demo.)*
 
