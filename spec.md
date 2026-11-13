@@ -4,9 +4,9 @@
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
-|Từ Huy Bảo | 2A202604021 |  |
+| Từ Huy Bảo | 2A202604021 |  |
 | Chu Nguyễn Tùng Dương | 2A202604016 |  |
-|    |  |  |
+| Nguyễn Hữu An | 2A202604024 |  |
 
 > *(Điền tên, mã học viên, và việc mỗi người làm trước khi nộp — TA/giảng viên hỏi bất kỳ thành viên lúc demo.)*
 
