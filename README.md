@@ -2,6 +2,8 @@
 
 Prototype trợ lý học tập cho khóa **Nhập môn phân tích dữ liệu**, buổi 3 **Thống kê mô tả**. Hai ca chính: **#5 tài liệu §3.3 có kiến thức sai** và **#2 xin xác nhận đáp án bài đang mở**.
 
+> **Chưa có API key?** Bấm đúp `prototype/Open-Demo.cmd` là demo được ngay — xem [Mở bản không cần API key](#mở-bản-không-cần-api-key).
+
 ## Mở demo Luna trực tiếp — cần OpenAI API key
 
 **Muốn Luna phản hồi theo câu hỏi, cần API key OpenAI hợp lệ trong file `.env` trên máy.** Key không được đưa lên GitHub và không đi kèm repository. Chỉ mở HTML hoặc điền key mà chưa chạy launcher live thì chưa kết nối Luna.
@@ -46,7 +48,26 @@ Các địa chỉ `127.0.0.1` là **demo trên máy**, không phải website onl
 
 ## Mở bản không cần API key
 
-Bấm đúp **`prototype/Open-Demo.cmd`** → landing → **Bắt đầu học**. Hoặc mở `prototype/landing.html` / `prototype/index.html` trực tiếp. Bản này dùng fixture, không gọi LLM; các ca, quyền tự chủ và approval vẫn tương tác được.
+Bản này chạy hoàn toàn bằng fixture có sẵn trong repo: **không cần API key, file `.env`, Node.js, server hay Internet**. Đủ để demo cả hai ca, ba phương án tự chủ và luồng duyệt.
+
+1. Clone hoặc tải repo về máy, giữ nguyên thư mục `prototype` (các file HTML/CSS/JS và `assets` phải nằm cùng nhau).
+2. Trong **File Explorer**, mở thư mục `prototype`, bấm đúp **`Open-Demo.cmd`**. Trình duyệt mặc định mở landing; bấm **Bắt đầu học** để vào trợ lý.
+3. Muốn bỏ qua landing, bấm đúp thẳng một trong các file sau trong `prototype`:
+
+   | File | Mở ra |
+   |---|---|
+   | `landing.html` | Landing → **Bắt đầu học** |
+   | `index.html` | Trợ lý học tập |
+   | `index-ca2.html` | Vào thẳng ca #2 (bài đang mở) |
+
+4. Làm theo [Trình tự demo nhanh](#trình-tự-demo-nhanh) ở trên; mọi bước đều dùng được ở bản này.
+
+### Khác gì so với bản live
+
+- Thanh địa chỉ là đường dẫn `file:///…`, không phải `http://127.0.0.1:5180`. Phản hồi của AI mang nhãn **Phản hồi mô phỏng**, không có nhãn **Luna · trực tiếp**.
+- Câu trả lời là nội dung soạn sẵn, chọn theo từ khóa của câu hỏi. Câu tự nhập ngoài các ca dựng sẵn sẽ nhận phản hồi “chưa đủ căn cứ / cần làm rõ” thay vì câu trả lời sinh mới.
+- Chọn ca, đổi ①/②/③, **Approve / Reject / Hủy**, gỡ cảnh báo, nhờ TA, marker **i**, **VI/EN**, **Dark/Light** và **Reset Demo** hoạt động giống bản live. Không có dữ liệu nào được gửi ra ngoài máy.
+- Nếu đã chạy `Open-Live-Demo.cmd` nhưng chưa có key (hoặc key lỗi), demo vẫn dùng được: phản hồi mang nhãn **Fixture dự phòng** kèm lý do.
 
 `Generate-Luna-Demo.cmd` là công cụ cũ để tạo sẵn cấu hình gợi mở, **không phải launcher chat trực tiếp**. Khi muốn dùng key để hỏi Luna, chọn **`Open-Live-Demo.cmd`**.
 
