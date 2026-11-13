@@ -54,3 +54,13 @@ Ba WARN còn lại: copy dài hơn mức marketing do giữ nhãn mô phỏng/c�
 Sáu output khác nhau, badge khuyến nghị giữ #5=②/#2=① dù đổi lựa chọn; nút về mặc định, trạng thái sau Approve/Reject/undo và diagnostics thu gọn được kiểm tra. Bản Luna dùng cấu hình từ ngân hàng gợi mở đã duyệt; generated HTML được kiểm tra trong browser với profile thử. Đã gọi OpenAI thật một lần thành công sau khi người dùng điền key, tạo luna-demo.html hợp lệ. Browser kiểm tra chính file thật: sáu phương án, badge cố định, mobile/Light/EN, không có HTTP/API request lúc demo. Test API tự động dùng test double; không suy ra SLA hoặc quota còn lại từ một lần thành công. `.env` và HTML tạo sẵn bị ignore, key không xuất vào trang.
 
 Reviewer độc lập không thấy lỗi important mới ở khuyến nghị cố định, sáu output, TA AUTO sau hành động học viên, guard enum Luna và luồng key. Copy-lint app hiện tại: 0 FAIL/0 WARN. Landing giữ nguyên, các giới hạn gate đã ghi ở trên vẫn tồn tại.
+
+## Đợt tự chạy workflow và Luna chat trực tiếp
+
+Đã chạy đầy đủ 49 kiểm tra, 49 pass. Review độc lập phát hiện thêm ba trường hợp: hỏi gián tiếp bài đang mở, khôi phục placeholder sau duyệt, và hủy lượt live chưa khôi phục policy. Đã sửa và chạy lại 11 kiểm tra engine cùng 11 kiểm tra comparison/live, đều pass; có regression cho từng lỗi, câu trả lời viết số bằng chữ và kết quả API đến muộn.
+
+Browser kiểm tra đổi quyền tự mở bản nháp/chờ duyệt/thẻ cả lớp; chat đổi theo action, giữ khuyến nghị #5②/#2①; desktop và 390px không tràn. Ảnh annotation đã chụp lại. Hai câu hỏi thật về §3.3 và phương sai bằng một đã gọi OpenAI thành công, trả lời khác nhau với origin=luna. Một lần ca #2 dùng fallback vì guard cũ chặn cả cụm “không xác nhận lựa chọn”; đã sửa guard để cho phép lời từ chối nhưng vẫn chặn đáp số/lựa chọn cuối.
+
+Luna live là tùy chọn có mạng qua cầu nối Node loopback, không database. Kiểm tra guard là bằng chứng trong phạm vi prototype, không phải bảo đảm an toàn cho triển khai production. Khi lỗi/vượt guard dùng fixture có nhãn rõ; TA/FAQ vẫn mô phỏng. Landing không đổi, giới hạn Taste finish gate đã ghi ở trên giữ nguyên.
+
+Review bổ sung kiểm tra câu xác nhận ngắn “Đúng.”: blacklist không đủ bảo vệ bài đang mở. Đã thay toàn bộ câu trả lời/follow-up ca #2 bằng enum nội dung phương pháp đã duyệt, kiểm tra lại độc lập ngoài schema API. Luna vẫn chọn hướng theo từng câu hỏi; UI ghi rõ “gợi ý giới hạn”. Ca #5 giữ sinh phản hồi trực tiếp. Kiểm tra live/comparison sau sửa đều pass.

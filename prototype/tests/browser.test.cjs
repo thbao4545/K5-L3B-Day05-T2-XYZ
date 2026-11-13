@@ -117,9 +117,10 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
     await t.test('FAQ comparison really drafts, approves, rejects, blocks and removes mock publication',async()=>{
       await page.setViewportSize({width:1440,height:1000});await scenario('source-error');
       if(!await page.locator('#autonomy-panel').evaluate(e=>e.open))await page.locator('#autonomy-panel>summary').click();
+      const faqCalls=await page.evaluate(()=>StudyFlowAutonomy.state.actions.filter(a=>a.tool==='dang_FAQ').length);
       await page.locator('[data-autonomy="variant"][data-variant="1"]').click();
       await page.locator('[data-autonomy="manual"]').click();assert.equal(await page.locator('#faq-draft').isVisible(),true);
-      assert.equal(await page.locator('.trace-item').filter({hasText:'dang_FAQ'}).count(),0,'manual-report option must not call FAQ tool');
+      assert.equal(await page.evaluate(()=>StudyFlowAutonomy.state.actions.filter(a=>a.tool==='dang_FAQ').length),faqCalls,'manual-report option must not make a new FAQ call');
       await page.locator('[data-autonomy="variant"][data-variant="2"]').click();
       await page.locator('[data-autonomy="faq-request"]').click();assert.match(await page.locator('.approval-card').innerText(),/awaiting_approval/);
       assert.doesNotMatch(await page.locator('.approval-card').innerText(),/published_mock/);
@@ -142,7 +143,7 @@ test('T2 end-to-end, truthful autonomy, recovery and responsive static pages', {
     await t.test('TA may approve a safe hint, never an answer; rejected hint can be requested again',async()=>{
       await scenario('exercise');
       await page.locator('[data-autonomy="variant"][data-variant="2"]').click();
-      await page.locator('[data-action="hint"]').click();
+      assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true,'switching to approval immediately starts pending workflow');
       assert.match(await page.locator('.approval-card').innerText(),/awaiting_approval/);
       await page.locator('[data-autonomy="reject"]').click();assert.equal(await page.locator('[data-action="hint"]').isDisabled(),false);
       await page.locator('[data-action="hint"]').click();await page.locator('[data-autonomy="approve"]').click();

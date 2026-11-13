@@ -40,6 +40,8 @@ Kiểm tra bình thường: so sánh trung bình/trung vị, đọc AUTO có cit
 
 ① G2 phân biệt điều biết/chưa biết; ② G11 mở bằng chứng; ③ domain #6/#3 bảo vệ đúng rủi ro; ④ Feedback & Control/Human-in-the-Loop gắn vào chờ/duyệt/từ chối/huỷ; ⑤ PAIR Graceful Failure chuyển người kèm tóm tắt; ⑥ G9 sửa/rút; ⑦ G10 hỏi lại khi thiếu nguồn. FAQ phương án ① không có ④ vì không gọi tool công bố; chuyển TA riêng vẫn có ④.
 
-## So sánh output và cấu hình Luna
+## So sánh hành vi và Luna trực tiếp
 
-Khuyến nghị cố định #5=②/#2=①, độc lập lựa chọn đang thử. Output đổi theo sáu phương án và action thật; diagnostics thu gọn. Luna tùy chọn chỉ chuẩn bị focus của câu hỏi gợi mở từ enum đã duyệt, không thực thi tool hoặc nới hard guardrail. Generator cục bộ tạo HTML tĩnh; không cần backend/database.
+Khuyến nghị cố định #5②/#2①. Chọn phương án tự chạy luồng: bản nháp học viên / chờ giảng viên / cảnh báo lớp giả định; ca #2 gợi ý / chờ hỗ trợ / bị chặn. Chat và trạng thái thực thi cùng đổi; không chỉ thay lời mô tả. Đổi ca/phương án hủy yêu cầu đang chờ cũ. Approve/Reject/Cancel/gỡ cập nhật quyết định ngay.
+
+Chế độ Luna tùy chọn sinh phản hồi cho mỗi câu hỏi qua Node loopback đọc key .env. Policy và fixture quyết định quyền, nguồn hợp lệ và guard; model không tự thay quyền hoặc gọi tool. Nếu kết quả sinh vượt guard thì dùng fixture có nhãn rõ. FAQ và TA luôn mô phỏng, kể cả khi phản hồi là Luna thật.

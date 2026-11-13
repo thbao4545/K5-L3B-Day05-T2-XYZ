@@ -114,7 +114,10 @@
 - **Quyết định UX:** dùng nhãn bằng chứng fixture + citation mở được + giải thích toán, không % confidence giả. Loại nhãn “chưa chắc” chung chung vì làm người học nghi cả phản ví dụ đúng. Chọn tóm tắt TA soạn sẵn + xem/sửa/consent để giữ quyền người học, loại tự chuyển/disclaimer đơn thuần. Chặn đáp án trước khi hiển thị; gỡ FAQ không thu hồi thông tin đã đọc. Phương án tự đăng chỉ minh họa rủi ro bị loại, không phải khuyến nghị.
 - **Giao diện và kiểm tra:** app Dark theo landing, Light tùy chọn, VI/EN lưu cục bộ; nguồn và câu người học giữ nguyên. UI UX Pro Max và Taste cài global, không copy source skills vào repo. Đã kiểm tra Chrome desktop/mobile, đủ các luồng duyệt/từ chối/hủy/chặn/reset và sửa lỗi. [README](prototype/README.md) mô tả demo và mock; [QA](prototype/QA.md) ghi kết quả, review và giới hạn Taste gate. Landing giữ nguyên trong đợt nâng cấp autonomy này.
 
-- **Luna tùy chọn, không backend/database:** `.env` local (Git ignore), model `gpt-6-luna`; bấm `Generate-Luna-Demo.cmd` để script tạo `luna-demo.html` tĩnh. LLM chỉ chọn focus câu hỏi gợi mở từ enum đã duyệt; không tự viết đáp án, sửa nguồn, thay quyền hoặc thực thi tool. Trang ghi “Luna · gợi mở đã tạo sẵn”, không giả vờ chat live. Đã gọi OpenAI thật một lần thành công; browser kiểm tra bản được tạo không gọi API khi sử dụng. Không đưa key hoặc HTML tạo riêng lên Git.
+- **Luna trực tiếp tùy chọn:** `Open-Live-Demo.cmd` chạy cầu nối Node loopback đọc `.env` local (Git ignore), model `gpt-6-luna`. Mỗi câu hỏi gọi OpenAI; phản hồi được guard theo workflow, lỗi/vượt giới hạn dùng fixture có nhãn rõ. Không database; TA/FAQ vẫn mô phỏng, không sửa nguồn hay nâng quyền. Bản fixture vẫn mở tĩnh không key.
+
+
+- **Đổi quyền = đổi hành vi UI ngay:** #5 mở bản nháp / chờ giảng viên / cảnh báo lớp giả định; #2 đưa gợi ý / chờ duyệt / bị chặn. Chat, thẻ duyệt và kết quả cùng cập nhật. Dấu khuyến nghị giữ #5②/#2①, không dịch chuyển theo lựa chọn.
 
 ## §6. Tốt là gì  (chặng 6)
 

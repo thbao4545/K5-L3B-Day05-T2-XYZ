@@ -12,6 +12,7 @@ body{background:var(--canvas);color:var(--ink)}.workspace{background:radial-grad
 :is(button,a,summary,textarea,input,select):focus-visible{outline-color:var(--accent)}::selection{background:#5b76bf66;color:var(--ink)}
 .scenario-button[aria-pressed=true] .scenario-num{color:var(--accent)}.problem-quote>.marker{font-size:19px;letter-spacing:0}.problem-quote q{quotes:'“' '”'}.form-error{color:var(--error)}
 /* Comparison workspace: choices and output first; diagnostics stay optional. */
+.workflow-decision,.faq-preview{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--sage);border-radius:9px;padding:12px 14px;margin:12px 0;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.workflow-decision strong,.faq-preview strong{font-weight:500;color:var(--accent)}.workflow-decision p,.faq-preview p{margin:7px 0}.faq-preview small{color:var(--muted);font-size:10px}
 .autonomy-panel{border:1px solid var(--line);background:var(--panel);border-radius:14px;margin:0 0 22px;padding:0 18px;min-width:0}
 .autonomy-panel>summary{cursor:pointer;display:flex;align-items:center;gap:12px;font-size:12px;font-weight:500;color:var(--accent);min-height:48px}
 .autonomy-panel>summary>span{margin-left:auto;font-size:10px;font-weight:400;color:var(--muted)}

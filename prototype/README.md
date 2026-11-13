@@ -1,6 +1,6 @@
 # StudyFlow AI — LAB 5 / Track T2
 
-Prototype trợ lý học bài trong khóa **Nhập môn phân tích dữ liệu**, buổi 3 **Thống kê mô tả**. Hai ca chính giữ số của brainstorm và hai HTML gốc: **#5 tài liệu sai** và **#2 xin xác nhận đáp án bài đang mở**. HTML/CSS/JavaScript tĩnh, không build step hoặc AI/backend thật.
+Prototype trợ lý học bài trong khóa **Nhập môn phân tích dữ liệu**, buổi 3 **Thống kê mô tả**. Hai ca chính giữ số của brainstorm và hai HTML gốc: **#5 tài liệu sai** và **#2 xin xác nhận đáp án bài đang mở**. HTML/CSS/JavaScript không build step. Bản fixture chạy tĩnh; chế độ Luna trực tiếp dùng cầu nối Node trên máy, không database.
 
 ## Mở bằng một lần bấm
 
@@ -23,7 +23,7 @@ App mặc định Dark, đồng bộ Onest, nền gần đen và cyan/blue/viole
 
 `xac_nhan_dap_so` là **hành động con bị cấm**, không phải tool thứ năm. Phê duyệt không vô hiệu hóa hard guardrail của bài đang mở. Không có quyền tự sửa tài liệu. Trong chế độ so sánh, các dòng quyền thay đổi theo phương án đang chọn; nút chính sách ở sidebar luôn mô tả baseline.
 
-**①/②/③ là phương án thiết kế, không tương ứng 1:1 với AUTO/APPROVAL_REQUIRED/FORBIDDEN.** Dấu **Khuyến nghị** cố định ở **#5 → ②**, **#2 → ①**; viền chọn chỉ biểu thị phương án đang thử. Nút **Về khuyến nghị** phục hồi lựa chọn mà không dời dấu mặc định. Thẻ **Output AI** đổi câu trả lời dự kiến theo lựa chọn; chỉ bấm **Chạy mô phỏng** mới thực hiện action. Sau đó output phản ánh thật trạng thái chờ/duyệt/từ chối/hủy/gỡ. Bảng bốn tool, bản nháp và trace thu gọn để ưu tiên output. Các mức chính thức hiển thị riêng cạnh từng tool. Phương án không dùng tool được ghi FORBIDDEN trong phạm vi so sánh; không biến thành quyết định chính thức của nhóm.
+**①/②/③ là phương án thiết kế, không tương ứng 1:1 với AUTO/APPROVAL_REQUIRED/FORBIDDEN.** Dấu **Khuyến nghị** cố định ở **#5 → ②**, **#2 → ①**; viền chọn chỉ biểu thị phương án đang thử. Nút **Về khuyến nghị** phục hồi lựa chọn mà không dời dấu mặc định. **Đổi phương án là chạy lại luồng ngay**: chat đổi quyết định, bản nháp/chờ duyệt/cảnh báo lớp xuất hiện đúng quyền. Nút **Chạy mô phỏng** cho phép chạy lại action. Sau đó output phản ánh thật trạng thái chờ/duyệt/từ chối/hủy/gỡ. Bảng bốn tool, bản nháp và trace thu gọn để ưu tiên output. Các mức chính thức hiển thị riêng cạnh từng tool. Phương án không dùng tool được ghi FORBIDDEN trong phạm vi so sánh; không biến thành quyết định chính thức của nhóm.
 
 ## Demo ca #5 — tài liệu §3.3 sai
 
@@ -71,19 +71,17 @@ Mặc định tắt để giữ màn học gọn. Bật **i** ở thanh đầu t
 
 ![Autonomy ca #5: bốn tool, phương án ②, bản nháp và marker ④ chờ giảng viên duyệt](screenshots/02-autonomy.png)
 
-## Luna 6 tùy chọn — không backend/database
+## Luna trả lời trực tiếp
 
-Bản mặc định vẫn mở bằng `Open-Demo.cmd`, không key, không mạng. Nếu muốn dùng OpenAI để chuẩn bị một bản demo:
+**Bấm đúp `Open-Live-Demo.cmd`** → mở `http://127.0.0.1:5180/index.html`. Launcher tự chạy Node 22+ ẩn, không cần bash. `.env` ở gốc repo chứa `OPENAI_API_KEY` và `OPENAI_MODEL=gpt-6-luna`; key chỉ do Node đọc, không đưa vào trang hoặc Git. Người clone mới dùng `.env.example`.
 
-1. Mở **`.env` ở gốc repository**, điền `OPENAI_API_KEY`; `OPENAI_MODEL=gpt-6-luna` đã đặt sẵn. Máy này đã có file trống và Git bỏ qua. Người clone mới sao chép `.env.example` thành `.env`.
-2. Bấm đúp **`prototype/Generate-Luna-Demo.cmd`** (hoặc chạy `.ps1`). Cần Node 22+ và mạng cho đúng một lần tạo. Script đọc key trên máy, gọi Responses API rồi mở **`prototype/luna-demo.html`**.
-3. Bản HTML đã tạo chạy tĩnh/offline và vẫn bấm qua hai ca, mọi phương án, approval/reset. Không có request API khi xem demo. Muốn đổi cấu hình gợi mở thì chạy script lại; lỗi mạng/key/quota không ghi đè bản trước.
+Mỗi lần **Gửi** trong quyền cho phép gọi Responses API để Luna phản hồi theo câu hỏi và nguồn fixture. Ca #5 cho phép diễn đạt trực tiếp; ca #2 bài đang mở dùng schema enum để Luna chọn nội dung hướng dẫn đã duyệt, không cho sinh câu trả lời tự do. Nhãn và thông báo phân biệt rõ hai cách. Nhãn **Luna · trực tiếp** chỉ xuất hiện khi kết quả sinh được guard chấp nhận. Lỗi key/mạng/quota hoặc kết quả vượt guard hiển thị **Fixture dự phòng** cùng lý do. Policy cần duyệt/bị cấm dừng việc sinh hỗ trợ trước khi được phép; approval không mở quyền đáp số. Đổi quyền chỉ mô phỏng quyết định và UI, không giả vờ model thực thi tool.
 
-**LLM làm gì:** Luna tạo cấu hình chọn hướng câu hỏi gợi mở cho sáu ô workflow qua JSON schema enum. UI ghép câu hỏi từ ngân hàng đã duyệt và ghi **Luna · gợi mở đã tạo sẵn**. Model không tự viết đáp số hoặc hành động, không thay toán học/citation, recommendation, policy hay trạng thái phê duyệt. Đây là tạo cấu hình workflow, không phải chat live hoặc model tự quyết định quyền. Dữ liệu gửi là sáu tình huống dựng; không gửi hội thoại người học hay dãy lương bài tập.
+Đây là cầu nối HTTP loopback trên máy (một tiến trình Node), không database, không triển khai backend ngoài máy. Câu hỏi và ngữ cảnh giới hạn được gửi tới OpenAI; chỉ dùng dữ liệu dựng. Endpoint không phục vụ `.env` hay mã server. TA, FAQ, vai giảng viên, thời gian và hàng chờ vẫn mô phỏng. Hủy lượt gọi bỏ kết quả đến muộn; đổi quyền trong khi đang sinh hủy lượt và giữ câu hỏi để gửi lại.
 
-`.env`, HTML được tạo và file tạm đều bị Git ignore. Key không có trong HTML/JS của trình duyệt. Repo chỉ giữ `.env.example` trống. Generator dùng `store:false`, giới hạn output và timeout; điều này không phải cam kết về mọi chính sách lưu dữ liệu của nhà cung cấp. Đã chạy một lần gọi OpenAI thật thành công bằng key cục bộ sau khi người dùng điền. Test tự động vẫn dùng test double; đã mở bản HTML được tạo thật và kiểm tra không có HTTP/API request khi demo.
+Bản không key/offline vẫn mở bằng `Open-Demo.cmd`. Generator `Generate-Luna-Demo.cmd` cũ chỉ tạo cấu hình gợi mở từ enum; không phải chế độ chat trực tiếp.
 
-Đối chiếu [model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), [Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create), [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) và [giữ key ở môi trường cục bộ](https://developers.openai.com/api/reference/overview#authentication).
+Đối chiếu [model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), [Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create) và [bảo vệ API key](https://developers.openai.com/api/reference/overview#authentication).
 
 ## State, mock và mã nguồn
 
@@ -95,12 +93,21 @@ Bản mặc định vẫn mở bằng `Open-Demo.cmd`, không key, không mạng
 - `styles.css`, `themes.css`, `locale.js`, `assets/`: responsive, Dark/Light, VI/EN, SVG, Onest và SIL OFL.
 - `landing.html`: HTML độc lập, nhúng font/CSS/JS; shader ink tự viết với idle/pointer/burst, pause/reduced-motion và CSS fallback. Xấp xỉ thị giác fluid, không phải solver Navier–Stokes hay mã sao chép Pavel Dobryakov.
 
-**Web demo không backend, database, authentication, LLM live, agent hoặc endpoint giả.** Generator OpenAI tùy chọn chạy trước khi demo, tách khỏi trang web. Toàn bộ phản hồi, thời gian, thao tác và vai phê duyệt là mô phỏng. Queue TA lưu localStorage theo origin/trình duyệt; tối đa 5 yêu cầu chờ, chỉ dọn lịch sử đã rút. Nếu không lưu được thì giữ trong bộ nhớ và thông báo. FAQ, phê duyệt và trace chỉ giữ trong lần mở trang, mất khi reload; không có đồng bộ hoặc SLA. Chỉ nhập dữ liệu dựng.
+**Chế độ tĩnh** không gọi API. **Chế độ Luna live** gọi OpenAI qua Node cục bộ; không gửi TA hoặc công bố FAQ thật. Queue TA lưu localStorage theo trình duyệt; FAQ, phê duyệt và trace giữ trong lần mở trang. Không đồng bộ hoặc SLA. Chỉ nhập dữ liệu dựng.
 
 Chạy kiểm tra từ repo (chỉ môi trường dev cần Node, Playwright, Chrome):
 
 ```text
-node --test prototype/tests/engine.test.cjs prototype/tests/autonomy.test.cjs prototype/tests/browser.test.cjs prototype/tests/comparison.test.cjs prototype/tests/luna.test.cjs
+node --test prototype/tests/*.test.cjs
 ```
 
 **UI UX Pro Max** và **Taste `design-taste-frontend`** đã có global, được đọc và áp dụng cho design system, accessibility, phong cách, responsive và browser inspection; không cài lại hoặc đưa source skills vào repo. Xem [QA.md](QA.md) cho bằng chứng và giới hạn gate; [AUTONOMY-NOTES.md](AUTONOMY-NOTES.md) là ghi chú kỹ thuật để nhóm viết §4, không giả lập ý kiến của thành viên.
+
+## Đổi quyền: kết quả quan sát ngay
+
+| Ca | ① | ② | ③ |
+|---|---|---|---|
+| #5 | Bản nháp học viên mở; không gọi FAQ | Tự soạn cảnh báo, chờ giảng viên; Approve mới xuất hiện thẻ cả lớp | Thẻ cả lớp xuất hiện ngay trong giả định bị loại; gỡ không thu hồi nội dung đã đọc |
+| #2 | Chat đưa gợi ý giới hạn | Chat dừng, khóa gợi ý tiếp, mở thẻ duyệt; Reject/Cancel không thực thi | Chat giải thích bị chặn; khóa giải hộ, không hiện đáp số |
+
+Khuyến nghị vẫn #5②/#2①. Marker thiết kế giữ nguyên. Reset Demo xóa luồng và chạy lại được. Ảnh `01-study-ux.png` và `02-autonomy.png` được chụp lại từ browser với annotation.

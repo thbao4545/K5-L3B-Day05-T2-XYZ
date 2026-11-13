@@ -2,12 +2,13 @@
 (() => {
   'use strict';
   const E = window.StudyFlow, A = window.StudyFlowAutonomy;
+  const LIVE=window.StudyFlowLive?.enabled===true;
   const $ = id => document.getElementById(id);
   const icon = name => `<svg aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let state = E.initialState(), messages = [], undoStack = [], activeScenario = '', editing = false;
   let pendingHint=null, taActionId=null; const taActions=new Map();
-  let timer, generation = 0, busy = false, toastTimer, lastTrigger, storageAvailable = true;
+  let timer, generation = 0, busy = false, toastTimer, lastTrigger, storageAvailable = true,requestController=null;
   const STORAGE_KEY = 'studyflow-ta-fixture-v1';
   function retainRequests(requests) {
     const waiting = requests.filter(r=>r.status==='waiting');
@@ -34,6 +35,7 @@
   }
   function cancelPending() {
     generation++; clearTimeout(timer); busy = false;
+    requestController?.abort();requestController=null;
     if(pendingHint){const id=pendingHint.id;pendingHint=null;A.change({type:'CANCEL',id});}
     for(const action of A.state.actions.filter(a=>['allowed','awaiting_approval'].includes(a.status)))A.change({type:'CANCEL',id:action.id});
     $('conversation').removeAttribute('aria-busy'); updateComposer();
@@ -59,17 +61,19 @@
     const warning = r.state === 'needs_verification';
     const missing = ['insufficient_evidence','clarification_required'].includes(r.state);
     return `<article class="message assistant-message">
-      <div class="message-meta"><span class="mini-avatar">${icon('spark')}</span><strong>StudyFlow AI</strong><span>· Phản hồi mô phỏng</span></div>
+      <div class="message-meta"><span class="mini-avatar">${icon('spark')}</span><strong>StudyFlow AI</strong><span>${r.origin==='luna'?(r.state==='bounded_hint'?'· Luna · gợi ý giới hạn':'· Luna · trực tiếp'):r.origin==='policy-simulation'?'· Mô phỏng quyền':r.origin?'· Fixture dự phòng':'· Phản hồi mô phỏng'}</span></div>
       <div class="assistant-card">
         ${reported ? '<p class="correction-note">Bạn đã đánh dấu phản hồi cần sửa · ghi nhận cục bộ, chưa báo TA.</p>' : ''}
+        ${r.notice?`<p class="correction-note" role="status">${esc(r.notice)}</p>`:''}
         <div class="evidence-label ${warning?'warning':missing?'missing':''}">${icon(warning?'alert':missing?'book':'shield')}${esc(r.label)}</div>
         <h2>${esc(r.title)}</h2>
         ${warning?sourceErrorDetail():''}
-        <p class="answer-body">${esc(r.body)}</p>
+        <p class="answer-body" ${r.origin==='luna'?'data-user-content':''}>${esc(r.body)}</p>
+        ${r.decision?`<div class="workflow-decision" role="status"><strong>${window.StudyFlowLocale.language==='en'?'AI decision · permission simulation':'AI quyết định · mô phỏng quyền'}</strong><p data-user-content>${esc(r.decision)}</p></div>`:''}
         ${r.state==='bounded_hint'?`<div class="cause-uncertainty">${marker(1)}${esc(window.StudyFlowLocale.t('Mình chưa biết bạn đang vướng ở bước nào; hãy nói rõ phần cần hiểu, không cần đưa đáp án.'))}</div><div class="warning-callout">${marker(3)}${esc(window.StudyFlowLocale.t('Bài đang mở: chỉ gợi ý phương pháp. Xác nhận đáp số bị chặn, kể cả sau khi TA duyệt.'))}</div>`:''}
         ${warning?`<div class="cause-uncertainty"><strong>G2 · Biết kết luận, chưa biết nguyên nhân.</strong>${esc(r.causeUncertainty)}${marker(1)}</div><div class="warning-callout">Câu “độ lệch chuẩn luôn nhỏ hơn phương sai” ở §3.3 cần được xem lại vì phản ví dụ trên bác bỏ tính “luôn”. Tài liệu có nguồn vẫn có thể chứa lỗi.${marker(3)}</div>`:''}
         ${r.comparison?comparison():''}${citations(r)}
-        ${r.followup?`<div class="followup"><small>ĐẾN LƯỢT BẠN SUY NGHĨ</small>${esc(r.followup)}</div>`:''}
+        ${r.followup?`<div class="followup"><small>ĐẾN LƯỢT BẠN SUY NGHĨ</small><span ${r.origin==='luna'?'data-user-content':''}>${esc(r.followup)}</span></div>`:''}
         ${missing?marker(7):''}
         ${isLatest?`<div class="message-actions">
           ${r.state==='bounded_hint'?`<button class="action-primary" data-action="hint" ${state.hintLevel>=2||A.policy('goi_y_bai_tap')==='FORBIDDEN'||pendingHint?'disabled':''}>${icon('spark')}Gợi ý bước tiếp theo</button>`:''}
@@ -87,7 +91,7 @@
   function renderConversation() {
     const container = $('conversation');
     container.innerHTML = messages.length ? messages.map((m,i) => m.kind==='user' ? `<article class="message user-message"><div class="message-meta">Bạn · ${state.clock}</div><p class="user-bubble" data-user-content>${esc(m.text)}</p></article>` : assistant(m.response, i===messages.length-1 && !busy, m.reported)).join('') : welcome();
-    if (busy) container.insertAdjacentHTML('beforeend', `<div class="loading-card" role="status"><div class="loading-header">${icon('spark')}Đang đối chiếu fixture buổi 3… <button class="text-button" data-action="stop">Huỷ</button></div><div class="loading-line"></div><div class="loading-line"></div><div class="loading-line"></div></div>`);
+    if (busy) container.insertAdjacentHTML('beforeend', `<div class="loading-card" role="status"><div class="loading-header">${icon('spark')}${LIVE?'Luna đang đọc câu hỏi và đối chiếu tài liệu…':'Đang đối chiếu fixture buổi 3…'} <button class="text-button" data-action="stop">Huỷ</button></div><div class="loading-line"></div><div class="loading-line"></div><div class="loading-line"></div></div>`);
   }
   function setView(queue) {
     $('study-view').hidden = queue; $('queue-view').hidden = !queue;
@@ -123,7 +127,7 @@
     setView(false); busy=true; updateComposer(); renderConversation();
     $('conversation').setAttribute('aria-busy','true');
     const current = ++generation;
-    timer = setTimeout(() => {
+    timer = setTimeout(async () => {
       if (current!==generation) return;
       dispatch({type:'ASK',question:text,context});
       const scenario=state.phase==='bounded_hint'?'exercise':'source-error';
@@ -137,9 +141,25 @@
           state={...state,response:{...state.response,label:'APPROVAL_REQUIRED',body:window.StudyFlowLocale.language==='en'?'Safe guidance is waiting for simulated TA approval. No answer confirmation is allowed. Open Autonomy / Tool Activity to review, approve, reject or cancel.':'Gợi ý phù hợp đang chờ TA duyệt trong mô phỏng. Không cho phép xác nhận đáp án. Mở Autonomy / Tool Activity để xem, duyệt, từ chối hoặc huỷ.'}};A.open();
         }else if(action.status==='denied')state={...state,response:{...state.response,label:'FORBIDDEN',body:window.StudyFlowLocale.language==='en'?'This rejected option is blocked. AI cannot solve or confirm an open assignment. Approval never overrides this rule.':'Phương án bị loại đã bị chặn. AI không được giải hộ hoặc xác nhận bài đang mở. Phê duyệt không vô hiệu hoá quy tắc này.'}};
       }
-      messages.push({kind:'assistant', response:state.response});
+      if(LIVE&&!pendingHint&&state.response.label!=='FORBIDDEN'){
+        const controller=new AbortController();requestController=controller;
+        try{
+          const reply=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json','X-StudyFlow-Request':'1'},signal:controller.signal,body:JSON.stringify({question:text,language:window.StudyFlowLocale.language,context,variant:A.state.variant,hintLevel:state.hintLevel,history:messages.slice(0,-1).slice(-6).map(m=>({role:m.kind==='user'?'user':'assistant',text:m.text||m.response?.body||''}))})});
+          if(!reply.ok)throw Error('local-api');const result=await reply.json();
+          if(current!==generation)return;
+          if(typeof result.response?.body!=='string')throw Error('invalid-response');
+          state={...state,response:{...state.response,body:result.response.body,followup:result.response.followup,sources:(result.response.sources||[]).filter(id=>E.fixtures.sections[id]),origin:result.response.origin==='luna'?'luna':'fixture-fallback',notice:result.notice||''}};
+        }catch{
+          if(current!==generation)return;
+          state={...state,response:{...state.response,origin:'fixture-fallback',notice:'Không kết nối được Luna. Đang dùng fixture dự phòng; hãy thử lại.'}};
+        }finally{if(requestController===controller)requestController=null;}
+      }
+      if(current!==generation)return;
+      const autonomyBase=state.phase==='bounded_hint'?(pendingHint?.response||(state.response.label==='FORBIDDEN'?E.resolveQuestion(text,{exercise:true,hintLevel:state.hintLevel}):state.response)):state.response;
+      messages.push({kind:'assistant', response:state.response,autonomyBase});
       busy=false; $('conversation').removeAttribute('aria-busy'); renderConversation();renderMeta();updateComposer();
-    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 650);
+      if(['needs_verification','bounded_hint'].includes(state.phase)){A.open();A.simulate();}
+    }, LIVE?0:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : 650);
   }
   function runScenario(index) {
     activeScenario=E.scenarios[index].id; A.context(activeScenario); ask(window.StudyFlowLocale.t(E.scenarios[index].question),{reset:true}); renderMeta();
@@ -215,7 +235,7 @@
       case 'report': editQuestion(true);break;
       case 'cancel-edit': editing=false;$('question').value='';updateComposer();break;
       case 'undo': {cancelPending();const last=undoStack.pop();if(last){const requests=state.requests,nextId=state.nextId;state={...last.state,requests,nextId,clock:state.clock};messages=last.messages;A.context(last.autonomy.scenario,last.autonomy.variant);activeScenario='';renderConversation();renderMeta();toast('Đã rút lượt hỏi khỏi hội thoại. Hàng chờ TA không thay đổi.');}break;}
-      case 'stop': cancelPending();if(messages.at(-1)?.kind==='user')messages.pop();undoStack.pop();renderConversation();toast('Đã huỷ phản hồi mô phỏng.');break;
+      case 'stop': {cancelPending();if(messages.at(-1)?.kind==='user')messages.pop();const snapshot=undoStack.pop();if(snapshot){state={...snapshot.state,requests:state.requests,nextId:state.nextId};A.context(snapshot.autonomy.scenario,snapshot.autonomy.variant);}renderConversation();toast('Đã huỷ lượt phản hồi.');break;}
       case 'ta': draftTA();break;
       case 'cancel-ta': closeTA();break;
       case 'withdraw': if(taActions.has(b.dataset.id))A.change({type:'UNDO',id:taActions.get(b.dataset.id)});dispatch({type:'WITHDRAW_TA',id:b.dataset.id});persist();renderMeta();toast('Đã rút yêu cầu khỏi hàng chờ mô phỏng.');break;
@@ -253,6 +273,22 @@
   $('scenario-list').innerHTML=[2,1].map(i=>{const s=E.scenarios[i];return `<button class="scenario-button primary-scenario" data-action="scenario" data-index="${i}" data-scenario="${s.id}" aria-pressed="false"><span class="scenario-num">${i===2?'#5':'#2'}</span><span>${esc(s.short)}<small>${i===2?'CA CHÍNH · KIỂM CHỨNG NGUỒN':'CA PHỤ · GIỮ GIỚI HẠN GỢI Ý'}</small></span>${icon('arrow')}</button>`}).join('');
   $('extra-scenarios').innerHTML=[0,3,4].map(i=>`<button class="scenario-button" data-action="scenario" data-index="${i}" data-scenario="${E.scenarios[i].id}" aria-pressed="false">${esc(E.scenarios[i].short)}</button>`).join('');
   $('resource-items').innerHTML=Object.entries(E.fixtures.sections).map(([id,s])=>`<button class="resource-item ${s.warning?'flagged':''}" data-action="source" data-source="${id}"><span>§${id}</span><span>${esc(s.title)}</span>${icon(s.warning?'alert':'chevron')}</button>`).join('');
+  window.addEventListener('studyflow-workflow-change',event=>{
+    if(busy||!['needs_verification','bounded_hint'].includes(state.phase)||messages.at(-1)?.kind!=='assistant')return;
+    const {scenario,variant,action,output}=event.detail;
+    if((state.phase==='bounded_hint')!==(scenario==='exercise'))return;
+    const message=messages.at(-1);
+    if(!message.autonomyBase)message.autonomyBase={...message.response};
+    const base=message.autonomyBase;
+    let response={...base,decision:output.reply};
+    if(scenario==='exercise'){
+      const waiting=action?.status==='awaiting_approval';
+      if(variant!==1){response={...response,body:output.reply,label:variant===3?'FORBIDDEN':waiting?'APPROVAL_REQUIRED':output.status,origin:'policy-simulation',followup:''};}
+      if(waiting&&pendingHint?.id!==action.id)pendingHint={id:action.id,level:action.payload.level||1,response:base};
+      else if(['rejected','cancelled','denied','undone'].includes(action?.status))pendingHint=null;
+    }
+    state={...state,response};message.response=response;renderConversation();
+  });
   window.addEventListener('studyflow-tool-approved',event=>{
     const action=event.detail;if(action.tool!=='goi_y_bai_tap'||state.phase!=='bounded_hint')return;
     if(pendingHint&&pendingHint.id!==action.id)return;
@@ -266,10 +302,11 @@
     if(pendingHint.level===1){state={...state,response:{...state.response,label:window.StudyFlowLocale.t('Yêu cầu gợi ý đã dừng'),body:window.StudyFlowLocale.t('Yêu cầu chưa được thực hiện. Bạn có thể sửa câu hỏi, yêu cầu gợi ý phù hợp hoặc nhờ TA. Không có đáp số nào được xác nhận.')}};if(messages.at(-1)?.kind==='assistant')messages.at(-1).response=state.response;}
     pendingHint=null;renderConversation();
   });
-  window.addEventListener('studyflow-policy-change',()=>{pendingHint=null;renderConversation();});
+  window.addEventListener('studyflow-policy-change',()=>{pendingHint=null;if(LIVE&&busy){const pending=messages.at(-1);cancelPending();if(pending?.kind==='user'){messages.pop();const snapshot=undoStack.pop();if(snapshot){state={...snapshot.state,requests:state.requests,nextId:state.nextId};A.context(snapshot.autonomy.scenario,snapshot.autonomy.variant);}$('question').value=pending.text;updateComposer();}toast('Đã hủy lượt đang chạy khi đổi quyền. Bạn có thể gửi lại câu hỏi.');}renderConversation();});
   window.addEventListener('studyflow-demo-reset',()=>{
     cancelPending();state=E.initialState();messages=[];undoStack=[];pendingHint=null;taActionId=null;taActions.clear();activeScenario='';editing=false;$('question').value='';persist();renderConversation();renderMeta();updateComposer();setView(false);
   });
+  if(LIVE){document.querySelector('.topbar .mock-badge').innerHTML='<span></span>Luna · trực tiếp';document.querySelector('.capability-note p').textContent='Luna trả lời trực tiếp theo câu hỏi và tài liệu buổi 3. Guardrail vẫn chặn đáp án bài đang mở; TA và FAQ là mô phỏng.';document.querySelector('.simulation-disclaimer').textContent='Luna live · Câu hỏi gửi tới OpenAI · TA/FAQ chỉ mô phỏng cục bộ';}
   closeMenu();renderConversation();renderMeta();updateComposer();
   if(location.hash==='#exercise')runScenario(1);
 })();

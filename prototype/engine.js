@@ -47,7 +47,7 @@
     // A correction can narrow or change scope. Explicit assessment references still stay protected.
     const changesScope = /hieu sai|sai y|ban sai|tra loi sai|toi muon hoi|doi cau hoi/.test(q);
     // Assessment protection takes priority over every other intent, including mixed requests.
-    if (/bai\s*(tap\s*)?0?3\b|8\s*nhan vien|luong|11[.,]5|15[.,]25|\b45\b/.test(q) || (context.exercise && !changesScope)) {
+    if (/bai\s*(tap\s*)?0?3\b|bai\s*(tap\s*)?(?:dang mo|chua (?:het han|nop))|open\s+bai tap|homework|cau\s*[abc]\b|8\s*nhan vien|luong|11[.,]5|15[.,]25|\b45\b/.test(q) || (context.exercise && !changesScope)) {
       return response('bounded_hint', 'Gợi ý có giới hạn', 'Mình có thể giúp bạn bắt đầu.',
         'Bài 3 đang mở đến 13/11/2026 lúc 23:59. Mình không cung cấp hoặc xác nhận đáp số hay lựa chọn cho câu b, cũng không viết nhận xét hộ. ' + hints[Math.min(context.hintLevel || 1, 2) - 1], ['3.1', '3.2', '3.5'], { followup: 'Bạn đang vướng ở cách tính hay cách phân tích giá trị ngoại lai?', hintLevel: Math.min(context.hintLevel || 1, 2) });
     }

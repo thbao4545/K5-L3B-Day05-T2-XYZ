@@ -30,6 +30,13 @@
  function open(){const panel=$('autonomy-panel');if(panel)panel.open=true;}
  function closeDraft(){disclosures.set('draft',false);const editor=document.querySelector('[data-disclosure="draft"]');if(editor)editor.open=false;}
  function context(scenario,variant){closeDraft();state=P.transition(state,{type:'CONTEXT',scenario:scenario==='exercise'?'exercise':'source-error',variant});selected=null;manualDraft=false;render();}
+ function simulate(){
+  if(state.scenario==='source-error'){
+   if(state.variant===1){manualDraft=true;selected=null;}
+   else selected=request('dang_FAQ','publish',{text:faqText.trim(),hypothetical:state.variant===3}).id;
+  }else selected=request('goi_y_bai_tap',state.variant===3?'confirm_answer':state.variant===2?'hint_support':'hint',{level:1,text:L('Chỉ hướng dẫn phương pháp, không xác nhận lựa chọn hoặc đáp số bài đang mở.','Guide the method only; never confirm a choice or final answer for the open assignment.')}).id;
+  render();
+ }
  function roleName(tool){return tool==='chuyen_TA'?L('Học viên','Student'):tool==='tra_cuu_tai_lieu'?'—':L('TA / giảng viên được uỷ quyền','Authorized TA / instructor');}
  function executor(tool){const mode=P.policy(state,tool);return mode==='APPROVAL_REQUIRED'?L('Người duyệt: ','Approver: ')+roleName(tool):mode==='FORBIDDEN'?L('Không được thực hiện','Execution prohibited'):tool==='dang_FAQ'?L('AI · chỉ giả định bị loại','AI · rejected hypothesis only'):L('AI tự làm trong phạm vi','AI acts within scope');}
  function statusLabel(status){return ({not_run:L('Xem trước · chưa chạy','Preview · not run'),drafted:L('Bản nháp cục bộ','Local draft'),awaiting_approval:L('Chờ phê duyệt','Awaiting approval'),executed:L('Đã thực hiện · mô phỏng','Executed · simulated'),denied:L('Đã chặn','Blocked'),rejected:L('Đã từ chối','Rejected'),cancelled:L('Đã hủy','Cancelled'),undone:L('Đã gỡ · mô phỏng','Removed · simulated')})[status]||status;}
@@ -50,11 +57,13 @@
    <article class="comparison-output ${view.rejected?'rejected-option':''}" id="comparison-output" data-output-status="${view.status}" aria-live="polite" aria-atomic="true"><div class="output-heading"><span><svg aria-hidden="true"><use href="#i-spark"/></svg>Output AI</span><span class="output-status">${statusLabel(view.status)}</span></div><p>${esc(view.reply)}</p><div class="output-boundary"><code>${view.tool}</code><span>${view.policy}</span>${view.generated?`<b class="generated-badge">${L('Luna · gợi mở đã tạo sẵn','Luna · prepared follow-up')}</b>`:''}${view.rejected?`<b>${L('GIẢ ĐỊNH BỊ LOẠI','REJECTED HYPOTHESIS')}</b>`:''}</div></article>
    ${exercise?exerciseControls():faqControls()}
    ${action?reviewCard(action):''}
+   ${action?.tool==='dang_FAQ'&&action.status==='executed'?`<article class="faq-preview" aria-live="polite"><strong>${state.variant===3?L('Cả lớp nhìn thấy · giả định bị loại','Class view · rejected hypothesis'):L('Cả lớp nhìn thấy · đã duyệt mô phỏng','Class view · approved simulation')}</strong><p data-user-content>${esc(action.payload.text)}</p><small>${L('Chỉ hiển thị tại trình duyệt này. Không có FAQ hay thông báo thật.','Visible in this browser only. No real FAQ or notification exists.')}</small></article>`:''}
    <p class="comparison-cost">${esc(view.cost)}</p>
    <div class="comparison-inspect"><details data-disclosure="tools" ${disclosures.get('tools')?'open':''}><summary>${L('4 tool & chính sách','4 tools & policy')}<span>§4</span></summary><p class="autonomy-intro">${L('①/②/③ là phương án thiết kế, không tương ứng 1:1 với ba policy. Bảng dưới theo phương án đang thử; khuyến nghị của ca luôn giữ nguyên.','Options ①/②/③ are design alternatives, not a 1:1 mapping to policies. This table follows the selected alternative; the scenario recommendation stays fixed.')}</p><div class="autonomy-tools">${Object.keys(P.registry).map(tool=>`<div><code>${tool}</code><span class="policy-mode">${P.policy(state,tool)}</span><small>${executor(tool)}</small></div>`).join('')}</div><p class="autonomy-boundary">${L('§4: chuyển TA tự làm sau khi học viên chủ động nhờ hỗ trợ. Đáp số bài đang mở vẫn bị cấm kể cả được duyệt; xac_nhan_dap_so là hành động con, không phải tool thứ năm.','Section §4: TA routing is automatic after the learner requests help. Open-assignment answers stay forbidden even after approval; xac_nhan_dap_so is a sub-action, not a fifth tool.')}</p></details>
    <details class="tool-trace" data-disclosure="trace" ${disclosures.get('trace')?'open':''}><summary>${L('Tool Activity · nhật ký','Tool Activity · trace')}<span>${state.actions.length}</span></summary>${trace()}</details></div>
-   <div class="comparison-footer"><span>${L('Fixture xác định trước · không gửi dữ liệu','Deterministic fixtures · no data sent')}</span><button class="text-button autonomy-reset" data-autonomy="reset">Reset Demo</button></div>`;
+   <div class="comparison-footer"><span>${L('Tool cục bộ · TA/FAQ chưa gửi thật','Local tools · no real TA/FAQ delivery')}</span><button class="text-button autonomy-reset" data-autonomy="reset">Reset Demo</button></div>`;
   if(focusAction){const match=[...$('autonomy-content').querySelectorAll('[data-autonomy]')].find(el=>el.dataset.autonomy===focusAction&&el.dataset.id===focusId&&el.dataset.variant===focusVariant);(match||$('autonomy-content').querySelector('.approval-card'))?.focus({preventScroll:true});}
+  window.dispatchEvent(new CustomEvent('studyflow-workflow-change',{detail:{scenario:state.scenario,variant:state.variant,action,output:view}}));
  }
  function draftEditor(label,forceOpen=false){
   return `<details class="draft-editor" data-disclosure="draft" ${forceOpen||disclosures.get('draft')?'open':''}><summary><span class="marker" data-mark="6" aria-hidden="true">⑥</span>${label}</summary><label class="autonomy-label" for="faq-draft">${L('Nội dung sẽ được xem trong mô phỏng','Content to review in this simulation')}</label><textarea id="faq-draft" maxlength="1600" data-user-content>${esc(faqText)}</textarea></details>`;
@@ -77,7 +86,7 @@
   const b=e.target.closest('[data-autonomy]');if(!b)return;open();
   const id=b.dataset.id;
   switch(b.dataset.autonomy){
-   case 'variant':closeDraft();change({type:'CONTEXT',scenario:state.scenario,variant:Number(b.dataset.variant)});selected=null;manualDraft=false;if(state.scenario==='exercise'&&state.variant===3)selected=request('goi_y_bai_tap','confirm_answer').id;render();window.dispatchEvent(new CustomEvent('studyflow-policy-change'));break;
+   case 'variant':closeDraft();state=P.transition(state,{type:'CONTEXT',scenario:state.scenario,variant:Number(b.dataset.variant)});selected=null;manualDraft=false;window.dispatchEvent(new CustomEvent('studyflow-policy-change'));simulate();break;
    case 'recommended':document.querySelector(`[data-autonomy="variant"][data-variant="${P.recommended(state.scenario)}"]`).click();break;
    case 'hint-demo':selected=request('goi_y_bai_tap','hint',{level:1}).id;render();break;
    case 'manual':manualDraft=true;render();break;
@@ -92,6 +101,6 @@
   }
  });
  window.addEventListener('studyflow-locale-change',render);
- window.StudyFlowAutonomy={request,approve,change,context,open,render,get state(){return state;},get policy(){return tool=>P.policy(state,tool);}};
+ window.StudyFlowAutonomy={request,approve,change,context,simulate,open,render,get state(){return state;},get policy(){return tool=>P.policy(state,tool);}};
  render();
 })();
