@@ -76,7 +76,7 @@
         ${r.followup?`<div class="followup"><small>ĐẾN LƯỢT BẠN SUY NGHĨ</small><span ${r.origin==='luna'?'data-user-content':''}>${esc(r.followup)}</span></div>`:''}
         ${missing?marker(7):''}
         ${isLatest?`<div class="message-actions">
-          ${r.state==='bounded_hint'?`<button class="action-primary" data-action="hint" ${state.hintLevel>=2||A.policy('goi_y_bai_tap')==='FORBIDDEN'||pendingHint?'disabled':''}>${icon('spark')}Gợi ý bước tiếp theo</button>`:''}
+          ${r.state==='bounded_hint'?`<button class="action-primary" data-action="hint" ${state.hintLevel>=2||(A.state.scenario==='exercise'&&A.state.variant===3)||pendingHint?'disabled':''}>${icon('spark')}Gợi ý bước tiếp theo</button>`:''}
           ${(r.choices||[]).map((text,i)=>`<button data-action="choice" data-choice="${i}">${esc(text)}${icon('arrow')}</button>`).join('')}
           ${r.outline?'<button data-action="outline">Xem đề cương</button>':''}
           <button class="${warning?'action-primary':''}" data-action="ta">${icon('chat')}Nhờ TA xác minh</button>${marker(5)}
@@ -135,7 +135,7 @@
       A.request('tra_cuu_tai_lieu','read',{sourceAvailable:state.response.sources.length>0||!!state.response.courseSource});
       if(state.phase==='bounded_hint'){
         if(/đáp|đúng|xác nhận|answer|confirm|right/i.test(text))A.request('goi_y_bai_tap','confirm_answer');
-        const action=A.request('goi_y_bai_tap','hint',{level:1});
+        const action=A.request('goi_y_bai_tap',A.state.variant===3?'final_solution':'hint',{level:1});
         if(action.status==='awaiting_approval'){
           pendingHint={id:action.id,level:1,response:state.response};
           state={...state,response:{...state.response,label:'APPROVAL_REQUIRED',body:window.StudyFlowLocale.language==='en'?'Safe guidance is waiting for simulated TA approval. No answer confirmation is allowed. Open Autonomy / Tool Activity to review, approve, reject or cancel.':'Gợi ý phù hợp đang chờ TA duyệt trong mô phỏng. Không cho phép xác nhận đáp án. Mở Autonomy / Tool Activity để xem, duyệt, từ chối hoặc huỷ.'}};A.open();
@@ -283,7 +283,7 @@
     let response={...base,decision:output.reply};
     if(scenario==='exercise'){
       const waiting=action?.status==='awaiting_approval';
-      if(variant!==1){response={...response,body:output.reply,label:variant===3?'FORBIDDEN':waiting?'APPROVAL_REQUIRED':output.status,origin:'policy-simulation',followup:''};}
+      if(variant!==1){response={...response,body:output.reply,label:variant===3?'AUTO · giả định bị loại':waiting?'APPROVAL_REQUIRED':output.status,origin:'policy-simulation',followup:'',...(variant===3?{title:window.StudyFlowLocale.language==='en'?'AI solves it for you · answer hidden':'AI tự giải thay bạn · đáp án đã ẩn'}:{})};}
       if(waiting&&pendingHint?.id!==action.id)pendingHint={id:action.id,level:action.payload.level||1,response:base};
       else if(['rejected','cancelled','denied','undone'].includes(action?.status))pendingHint=null;
     }

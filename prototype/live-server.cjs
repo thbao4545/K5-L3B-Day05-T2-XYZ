@@ -25,7 +25,7 @@ async function respond(input,config={}){
  const variant=[1,2,3].includes(input.variant)?input.variant:P.recommended(scenario);
  const mode=P.policy(P.initial(scenario,variant),'goi_y_bai_tap');
  const fallback=(origin,notice)=>({response:{...base,origin},notice});
- if(exercise&&mode!=='AUTO')return fallback('policy-fallback',language==='en'?'Policy stopped live guidance. Review or change the selected alternative.':'Policy dừng gợi ý trực tiếp. Cần duyệt hoặc đổi phương án đang thử.');
+ if(exercise&&(mode!=='AUTO'||variant===3))return fallback('policy-fallback',language==='en'?'Policy stopped live guidance. Review or change the selected alternative.':'Policy dừng gợi ý trực tiếp. Cần duyệt hoặc đổi phương án đang thử.');
  if(!config.apiKey?.trim())return fallback('api-fallback','Chưa có OPENAI_API_KEY trong .env. Đang dùng fixture dự phòng.');
  const sections=sourceIds.filter(id=>!exercise||id!=='3.5').map(id=>({id,...E.fixtures.sections[id]}));
  const history=exercise?[]:(Array.isArray(input.history)?input.history.slice(-6).map(m=>({role:m.role==='assistant'?'assistant':'user',text:String(m.text||'').slice(0,1500)})):[]);

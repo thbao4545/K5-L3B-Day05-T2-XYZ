@@ -45,3 +45,5 @@ Kiểm tra bình thường: so sánh trung bình/trung vị, đọc AUTO có cit
 Khuyến nghị cố định #5②/#2①. Chọn phương án tự chạy luồng: bản nháp học viên / chờ giảng viên / cảnh báo lớp giả định; ca #2 gợi ý / chờ hỗ trợ / bị chặn. Chat và trạng thái thực thi cùng đổi; không chỉ thay lời mô tả. Đổi ca/phương án hủy yêu cầu đang chờ cũ. Approve/Reject/Cancel/gỡ cập nhật quyết định ngay.
 
 Chế độ Luna tùy chọn sinh phản hồi cho mỗi câu hỏi qua Node loopback đọc key .env. Policy và fixture quyết định quyền, nguồn hợp lệ và guard; model không tự thay quyền hoặc gọi tool. Nếu kết quả sinh vượt guard thì dùng fixture có nhãn rõ. FAQ và TA luôn mô phỏng, kể cả khi phản hồi là Luna thật.
+
+Ca #2③ dùng AUTO giả định cho tool để minh họa AI tự giải, nhưng không mở quyền hành động con giải hộ. Preview có lời giải/đáp án được che; `final_solution` vẫn denied vì bài đang mở. Phân biệt quyền tool, output giả định và hard guardrail; baseline và recommendation không đổi.

@@ -53,6 +53,7 @@ test('autonomy comparison outputs and compact presentation',{timeout:90000},asyn
    await variant(2);assert.equal(await page.locator('.faq-preview').count(),0);assert.equal(await page.locator('[data-autonomy="approve"]').count(),1);
    await choose('exercise');await variant(2);assert.match(await page.locator('.assistant-card').last().innerText(),/waiting|chờ/i);
    await variant(3);assert.equal(await page.locator('[data-action="hint"]').isDisabled(),true);assert.match(await page.locator('.assistant-card').last().innerText(),/blocked|chặn/i);
+   assert.equal(await page.locator('.solution-preview').isVisible(),true);assert.match(await page.locator('.solution-preview').innerText(),/hidden|ẩn/i);assert.match(await page.locator('[data-autonomy="variant"][data-variant="3"]').innerText(),/AUTO/);
    assert.equal(await page.locator('[data-recommended="true"]').getAttribute('data-variant'),'1');
    await variant(2);await page.locator('#question').fill('Bài 3 tôi nên bắt đầu ra sao?');await page.locator('#send-button').click();await page.waitForFunction(()=>!document.getElementById('conversation').hasAttribute('aria-busy'));
    await page.locator('[data-autonomy="approve"]').click();assert.doesNotMatch(await page.locator('.assistant-card').last().innerText(),/APPROVAL_REQUIRED|đang chờ TA duyệt|waiting for simulated TA approval/i);

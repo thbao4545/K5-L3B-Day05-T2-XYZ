@@ -70,3 +70,7 @@ test('context change cancels pending approval; source editing and missing source
  s=request(s,'tra_cuu_tai_lieu','read',{sourceAvailable:false});assert.equal(latest(s).status,'denied');
  s=request(s,'xac_nhan_dap_so','execute');assert.equal(latest(s).status,'denied');assert.equal(Object.keys(A.registry).length,4);
 });
+test('rejected solve-it option separates hypothetical AUTO from the forbidden final-answer operation',()=>{
+ const s=A.initial('exercise',3);assert.equal(A.policy(s,'goi_y_bai_tap'),'AUTO');
+ const action=latest(request(s,'goi_y_bai_tap','final_solution'));assert.equal(action.status,'denied');assert.equal(action.reason,'open_assignment');
+});

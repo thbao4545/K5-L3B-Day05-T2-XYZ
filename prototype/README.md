@@ -111,3 +111,7 @@ node --test prototype/tests/*.test.cjs
 | #2 | Chat đưa gợi ý giới hạn | Chat dừng, khóa gợi ý tiếp, mở thẻ duyệt; Reject/Cancel không thực thi | Chat giải thích bị chặn; khóa giải hộ, không hiện đáp số |
 
 Khuyến nghị vẫn #5②/#2①. Marker thiết kế giữ nguyên. Reset Demo xóa luồng và chạy lại được. Ảnh `01-study-ux.png` và `02-autonomy.png` được chụp lại từ browser với annotation.
+
+### Ca #2 phương án ③: AUTO giả định và giới hạn triển khai
+
+Quyền tool được hiển thị **AUTO trong giả định bị loại**, không đánh đồng tool với hành động con. UI hiện bản xem trước AI bỏ qua gợi ý, chọn cách giải và đưa kết luận ngay; lựa chọn/đáp án được che để không giải hộ bài đang mở. Chat và thẻ preview đổi ngay khi bấm ③. Trace riêng ghi hành động `final_solution`/`confirm_answer` bị hard guardrail chặn. Đây là sự khác biệt giữa “nếu bỏ giới hạn thì output trông thế nào” và “hành vi nào prototype thực sự cho thực thi”. Không đổi baseline của §4 hay dấu khuyến nghị ①.

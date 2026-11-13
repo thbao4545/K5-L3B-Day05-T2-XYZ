@@ -64,3 +64,5 @@ Browser kiểm tra đổi quyền tự mở bản nháp/chờ duyệt/thẻ cả
 Luna live là tùy chọn có mạng qua cầu nối Node loopback, không database. Kiểm tra guard là bằng chứng trong phạm vi prototype, không phải bảo đảm an toàn cho triển khai production. Khi lỗi/vượt guard dùng fixture có nhãn rõ; TA/FAQ vẫn mô phỏng. Landing không đổi, giới hạn Taste finish gate đã ghi ở trên giữ nguyên.
 
 Review bổ sung kiểm tra câu xác nhận ngắn “Đúng.”: blacklist không đủ bảo vệ bài đang mở. Đã thay toàn bộ câu trả lời/follow-up ca #2 bằng enum nội dung phương pháp đã duyệt, kiểm tra lại độc lập ngoài schema API. Luna vẫn chọn hướng theo từng câu hỏi; UI ghi rõ “gợi ý giới hạn”. Ca #5 giữ sinh phản hồi trực tiếp. Kiểm tra live/comparison sau sửa đều pass.
+
+Bổ sung preview ca #2③: tool hiển thị AUTO giả định, output giải ngay có phần kết quả đã che, hành động con final_solution vẫn denied. Unit regression phân biệt hai lớp; browser kiểm tra preview hiện khi chuyển ③, nút gợi ý bị khóa và khuyến nghị giữ ①.

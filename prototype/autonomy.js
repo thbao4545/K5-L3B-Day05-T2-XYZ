@@ -17,7 +17,7 @@
   const options=exercise?[
    ['Gợi ý giới hạn','Bounded hints','Bài 3 đang mở. Mình chỉ gợi ý phương pháp: tự kiểm tra thứ tự dữ liệu và ảnh hưởng của giá trị ngoại lai. Mình không chốt lựa chọn hay đáp số.','Assignment 3 is open. I offer methods only: check the data order and the influence of outliers yourself. I will not choose or confirm an answer.','Hỗ trợ ngay, dừng trước đáp án.','Immediate help, stopping before the answer.'],
    ['TA duyệt gợi ý','TA reviews guidance','Mình sẽ xin TA duyệt hỗ trợ học tập phù hợp trước khi đưa thêm gợi ý. Bài đang mở nên không ai được dùng phê duyệt để giải hộ.','I will ask a TA to review safe learning support before offering more guidance. Approval cannot authorize solving an open assignment.','Chờ duyệt làm việc học chậm hơn; không mở quyền giải hộ.','Review adds waiting time; it never unlocks a final solution.'],
-   ['Tự giải · bị cấm','Full solution · forbidden','Yêu cầu tự giải đã bị chặn. Bài 3 đang mở: mình không đưa hoặc xác nhận đáp số, kể cả trong ví dụ minh họa rủi ro. Bạn có thể sửa câu hỏi hoặc nhờ TA.','The full-solution request is blocked. Assignment 3 is open: I cannot provide or confirm an answer, including in a risk demonstration. Edit the question or ask a TA.','Đáp án đã đọc không thể thu hồi, nên chặn trước khi hiển thị.','An answer cannot be unread, so it is blocked before display.']
+   ['AI tự giải · giả định','AI solves it · hypothetical','Nếu bỏ giới hạn, AI sẽ chọn cách giải, tính kết quả và đưa ngay đáp án thay bạn. Bản xem trước bên dưới mô phỏng kết quả đó với đáp án đã ẩn. Guardrail triển khai vẫn chặn việc tiết lộ kết quả thật.','Without limits, AI would choose a method, calculate the result and give you the answer immediately. The preview below simulates that outcome with the answer hidden. The deployment guardrail still blocks disclosure of the real answer.','Giải hộ nhanh nhưng người học có thể chép mà không hiểu; đáp án đã đọc không thể thu hồi.','Solving is fast, but learners may copy without understanding; an answer cannot be unread.']
   ]:[
    ['Học viên tự báo','Student reports','Phản ví dụ 0,25 → 0,5 cho thấy câu “luôn nhỏ hơn” cần xem lại. Mình có thể soạn nội dung để bạn tự báo giảng viên; mình không đăng FAQ ở phương án này.','The 0.25 → 0.5 counterexample shows that “always smaller” needs review. I can draft a report for you to share with the instructor; I do not publish a FAQ in this option.','Nếu học viên không báo, cả lớp có thể tiếp tục học nhầm.','If the student does not report it, classmates may keep learning the error.'],
    ['Duyệt trước khi đăng','Approve before publishing','Mình sẽ soạn bản nháp cảnh báo §3.3 để giảng viên xác minh. Chỉ sau khi giảng viên duyệt, cảnh báo mới được công bố trong mô phỏng.','I will draft a notice about §3.3 for instructor verification. It will only be published in this simulation after instructor approval.','Một lần duyệt giảm nguy cơ công bố sai cho cả lớp.','One review reduces the risk of misleading the entire class.'],
@@ -49,7 +49,7 @@
  function policy(s,tool){
   if(!Object.hasOwn(registry,tool))return 'FORBIDDEN';
   if(tool==='dang_FAQ'&&s.scenario==='source-error')return s.variant===1?'FORBIDDEN':s.variant===3?'AUTO':'APPROVAL_REQUIRED';
-  if(tool==='goi_y_bai_tap'&&s.scenario==='exercise')return s.variant===2?'APPROVAL_REQUIRED':s.variant===3?'FORBIDDEN':'AUTO';
+  if(tool==='goi_y_bai_tap'&&s.scenario==='exercise')return s.variant===2?'APPROVAL_REQUIRED':'AUTO';
   return registry[tool].policy;
  }
  function evaluate(s,tool,operation,payload){
